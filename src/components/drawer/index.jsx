@@ -81,7 +81,7 @@ export default function PersistentDrawerLeft() {
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <AppBar position="fixed" open={open}>
+            <AppBar position="fixed" open={open} style={{ backgroundColor: "#060d1d" }}>
                 <Toolbar>
                     <IconButton
                         color="inherit"
