@@ -35,7 +35,7 @@ function App() {
           </Marker>
         </Map>
       ) : (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
           <p>Carregando mapa...</p>
         </div>
       )}
