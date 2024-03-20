@@ -22,7 +22,7 @@ function App() {
     async function fetchBurningPoints() {
       try {
         // Carregar o arquivo JSON localmente usando o Axios
-        const response = await axios.get('/focos.json');
+        const response = await axios.get('/latest.json');
 
         // Extrair os dados de focos de queimadas do objeto de resposta
         const points = response.data.map(point => ({
