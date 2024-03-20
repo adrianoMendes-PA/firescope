@@ -3,7 +3,8 @@
     "builds": [
         {
             "src": "baixarCSVQueimadas.js",
-            "use": "@now/node"
+            "use": "@now/node",
+            "cron": "50 19 * * *"
         }
     ]
 }
