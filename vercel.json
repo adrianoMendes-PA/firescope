@@ -5,11 +5,5 @@
             "src": "baixarCSVQueimadas.js",
             "use": "@now/node"
         }
-    ],
-    "schedule": [
-        {
-            "cron": "45 19 * * *",
-            "src": "/baixar-csv-queimadas"
-        }
     ]
 }
