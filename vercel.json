@@ -6,13 +6,10 @@
             "use": "@now/node"
         }
     ],
-    "routes": [
+    "schedule": [
         {
-            "src": "/baixar-csv-queimadas",
-            "methods": [
-                "GET"
-            ],
-            "schedule": "cron(35 19 * * *)"
+            "cron": "45 19 * * *",
+            "src": "/baixar-csv-queimadas"
         }
     ]
 }
