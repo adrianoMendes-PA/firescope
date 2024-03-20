@@ -1,0 +1,18 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "baixarCSVQueimadas.js",
+            "use": "@now/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/baixar-csv-queimadas",
+            "methods": [
+                "GET"
+            ],
+            "schedule": "cron(35 19 * * *)"
+        }
+    ]
+}
