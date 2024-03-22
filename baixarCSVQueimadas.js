@@ -56,3 +56,6 @@ export async function downloadAndConvertCSV() {
         console.error('Erro ao baixar o arquivo CSV mais recente:', error);
     }
 }
+
+//descomentar no ambiente de dev
+//downloadAndConvertCSV();
