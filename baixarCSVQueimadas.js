@@ -3,11 +3,10 @@ import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import csvParser from 'csv-parser';
-// import cron from 'node-cron';
 import cheerio from 'cheerio';
 
 // Função para baixar o CSV mais recente e converter para JSON
-export async function downloadAndConvertCSV() {
+export default async function downloadAndConvertCSV() {
     // URL da página onde o arquivo CSV mais recente está localizado
     const url = 'https://dataserver-coids.inpe.br/queimadas/queimadas/focos/csv/diario/Brasil/';
     // Caminho onde o arquivo CSV será salvo
@@ -56,9 +55,3 @@ export async function downloadAndConvertCSV() {
         console.error('Erro ao baixar o arquivo CSV mais recente:', error);
     }
 }
-
-// Agenda a execução do script todos os dias às 18h
-// cron.schedule('00 18 * * *', () => {
-//     console.log('Executando script para baixar e converter CSV...');
-//     downloadAndConvertCSV();
-// });
