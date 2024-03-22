@@ -1,7 +1,8 @@
 {
     "functions": {
         "api/download": {
-            "handler": "api/cron.js"
+            "runtime": "nodejs16",
+            "memory": 512
         }
     },
     "crons": [
