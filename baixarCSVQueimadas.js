@@ -58,7 +58,7 @@ async function downloadAndConvertCSV() {
 }
 
 // Agenda a execução do script todos os dias às 18h
-cron.schedule('50 19 * * *', () => {
+cron.schedule('00 18 * * *', () => {
     console.log('Executando script para baixar e converter CSV...');
     downloadAndConvertCSV();
 });
