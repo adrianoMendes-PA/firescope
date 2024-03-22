@@ -8,7 +8,7 @@ import cheerio from 'cheerio';
 // Função para baixar o CSV mais recente e converter para JSON
 export async function downloadAndConvertCSV() {
     // URL da página onde o arquivo CSV mais recente está localizado
-    const url = 'https://dataserver-coids.inpe.br/queimadas/queimadas/focos/csv/diario/Brasil/';
+    const url = 'https://dataserver-coids.inpe.br/queimadas/queimadas/focos/csv/mensal/Brasil/';
     // Caminho onde o arquivo CSV será salvo
     const downloadPath = './public';
 
