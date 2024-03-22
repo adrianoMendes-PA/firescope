@@ -1,4 +1,4 @@
-import downloadAndConvertCSV from '../baixarCSVQueimadas.js';
+import { downloadAndConvertCSV } from '../baixarCSVQueimadas.js';
 
 export default async function handler(req, res) {
     try {
