@@ -8,9 +8,9 @@ import cheerio from 'cheerio';
 // Função para baixar o CSV mais recente e converter para JSON
 export async function downloadAndConvertCSV() {
     // URL da página onde o arquivo CSV mais recente está localizado
-    const url = 'https://dataserver-coids.inpe.br/queimadas/queimadas/focos/csv/diario/Brasil/';
-    // Caminho onde o arquivo CSV será salvo
-    const downloadPath = path.resolve('./public');
+    const url = 'https://dataserver-coids.inpe.br/queimadas/queimadas/focos/csv/10min/';
+    // Caminho onde o arquivo CSV será salvo temporariamente
+    const tmpPath = path.resolve('/tmp');
 
     try {
         const agent = new https.Agent({ rejectUnauthorized: false });
@@ -24,7 +24,7 @@ export async function downloadAndConvertCSV() {
 
         // Faz o download do arquivo CSV
         const csvResponse = await axios.get(downloadUrl, { responseType: 'stream', httpsAgent: agent });
-        const csvFilePath = path.join(downloadPath, 'latest.csv');
+        const csvFilePath = path.join(tmpPath, 'latest.csv');
         const csvStream = fs.createWriteStream(csvFilePath);
         csvResponse.data.pipe(csvStream);
 
@@ -37,7 +37,7 @@ export async function downloadAndConvertCSV() {
         console.log('Arquivo CSV mais recente baixado com sucesso:', csvFilePath);
 
         // Converte o arquivo CSV para JSON
-        const jsonFilePath = path.join(downloadPath, 'latest.json');
+        const jsonFilePath = path.join(tmpPath, 'latest.json');
         const jsonData = [];
         fs.createReadStream(csvFilePath)
             .pipe(csvParser())
@@ -55,6 +55,3 @@ export async function downloadAndConvertCSV() {
         console.error('Erro ao baixar o arquivo CSV mais recente:', error);
     }
 }
-
-//descomentar no ambiente dev
-//downloadAndConvertCSV();
