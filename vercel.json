@@ -1,0 +1,13 @@
+{
+    "functions": {
+        "api/download": {
+            "handler": "api/cron.js"
+        }
+    },
+    "crons": [
+        {
+            "function": "api/cron",
+            "schedule": "0 17 * * *"
+        }
+    ]
+}
