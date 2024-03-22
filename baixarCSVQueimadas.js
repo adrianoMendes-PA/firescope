@@ -8,9 +8,9 @@ import cheerio from 'cheerio';
 // Função para baixar o CSV mais recente e converter para JSON
 export async function downloadAndConvertCSV() {
     // URL da página onde o arquivo CSV mais recente está localizado
-    const url = 'https://dataserver-coids.inpe.br/queimadas/queimadas/focos/csv/10min/';
+    const url = 'https://dataserver-coids.inpe.br/queimadas/queimadas/focos/csv/diario/Brasil/';
     // Caminho onde o arquivo CSV será salvo temporariamente
-    const tmpPath = path.resolve('/tmp');
+    const tmpPath = path.resolve('./download');
 
     try {
         const agent = new https.Agent({ rejectUnauthorized: false });
@@ -55,3 +55,6 @@ export async function downloadAndConvertCSV() {
         console.error('Erro ao baixar o arquivo CSV mais recente:', error);
     }
 }
+
+//descomentar no ambiente de dev
+//downloadAndConvertCSV();
