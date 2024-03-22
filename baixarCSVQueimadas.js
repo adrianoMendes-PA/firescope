@@ -56,4 +56,5 @@ export async function downloadAndConvertCSV() {
     }
 }
 
-downloadAndConvertCSV();
+//descomentar no ambiente dev
+//downloadAndConvertCSV();
