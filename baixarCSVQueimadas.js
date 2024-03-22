@@ -10,7 +10,7 @@ export async function downloadAndConvertCSV() {
     // URL da página onde o arquivo CSV mais recente está localizado
     const url = 'https://dataserver-coids.inpe.br/queimadas/queimadas/focos/csv/diario/Brasil/';
     // Caminho onde o arquivo CSV será salvo
-    const downloadPath = './public';
+    const downloadPath = path.resolve('./public');
 
     try {
         const agent = new https.Agent({ rejectUnauthorized: false });
