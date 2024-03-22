@@ -1,15 +1,8 @@
 {
-    "functions": {
-        "api/cron": {
-            "runtime": "nodejs16",
-            "memory": 512
-        }
-    },
     "crons": [
         {
-            "function": "api/cron",
-            "schedule": "0 17 * * *",
-            "path": "/api/cron"
+            "path": "/api/cron",
+            "schedule": "0 10 * * *"
         }
     ]
 }
