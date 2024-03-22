@@ -1,6 +1,6 @@
-import downloadAndConvertCSV from '../baixarCSVQueimadas';
+import downloadAndConvertCSV from '../baixarCSVQueimadas.js';
 
-async function main() {
+export default async function handler(req, res) {
     try {
         await downloadAndConvertCSV();
         console.log("CSV downloaded and converted successfully!");
@@ -10,6 +10,3 @@ async function main() {
         res.status(500).end('Internal Server Error');
     }
 }
-
-// Chama a função principal
-main();
