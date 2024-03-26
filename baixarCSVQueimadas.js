@@ -8,7 +8,7 @@ import cheerio from 'cheerio';
 // Função para baixar o CSV mais recente e converter para JSON
 export async function downloadAndConvertCSV() {
     const url = 'https://dataserver-coids.inpe.br/queimadas/queimadas/focos/csv/diario/Brasil/';
-    const tmpPath = path.resolve('./download');
+    const tmpPath = path.resolve('./public');
 
     try {
         const agent = new https.Agent({ rejectUnauthorized: false });
@@ -76,4 +76,4 @@ async function convertCSVtoJSON(csvFilePath, tmpPath) {
 }
 
 // Comente essa linha no ambiente de produção
-downloadAndConvertCSV();
+//downloadAndConvertCSV();
