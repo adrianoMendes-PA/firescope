@@ -89,15 +89,15 @@ function App() {
 
           {/* Adiciona marcadores para cada foco de queimada */}
           {burningPoints.map((point, index) => (
-            <Marker key={point.id} longitude={point.lon} latitude={point.lat} anchor="bottom">
+            <Marker key={point.id} longitude={point.lon} latitude={point.lat} anchor="center">
               <FireIcon fontSize='large' color='error' onClick={() => handleMarkerClick(point.id)} />
               {selectedBurningPoint === point.id && (
                 <Popup
-                  offsetTop={-30}
                   longitude={point.lon}
                   latitude={point.lat}
                   onClose={closePopup}
                   closeOnClick={false}
+                  anchor="bottom"
                 >
                   <div>
                     {/* Informações adicionais sobre a queimada*/}
