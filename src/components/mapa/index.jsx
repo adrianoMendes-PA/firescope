@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import Map, { Marker, NavigationControl } from 'react-map-gl';
+import Map, { Marker, NavigationControl, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import RoomIcon from '@mui/icons-material/Room';
-import FireIcon from '@mui/icons-material/Whatshot'
+import FireIcon from '@mui/icons-material/LocalFireDepartmentOutlined'
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
+import { format } from 'date-fns';
 
 function App() {
   const accessToken = import.meta.env.VITE_TOKEN_MAP_BOX;
   const [location, setLocation] = useState({});
   const [burningPoints, setBurningPoints] = useState([]);
+  const [selectedBurningPoint, setSelectedBurningPoint] = useState(null);
 
   useEffect(() => {
-    const watchID = navigator.geolocation.watchPosition(handlePositionReceived);
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    };
+
+    const watchID = navigator.geolocation.watchPosition(handlePositionReceived, handlePositionError, options);
     return () => navigator.geolocation.clearWatch(watchID);
   }, []);
 
@@ -21,30 +29,46 @@ function App() {
     // Função para carregar e processar os dados de focos de queimadas
     async function fetchBurningPoints() {
       try {
-        // Carregar o arquivo JSON usando a rota de servidor
-        const response = await axios.get('/api/getLatestJson.js');
+        // Carrega o arquivo JSON usando a rota de servidor
+        const response = await axios.get('../../../download/latest.json');
 
-
-        // Extrair os dados de focos de queimadas do objeto de resposta
+        // Extrai os dados de focos de queimadas do objeto de resposta
         const points = response.data.map(point => ({
+          id: point.id,
           lat: point.lat,
-          lon: point.lon
+          lon: point.lon,
+          municipio: point.municipio,
+          estado: point.estado,
+          data: point.data_hora_gmt,
+          bioma: point.bioma
         }));
 
-        // Atualizar o estado com os focos de queimadas
+        // Atualiza o estado com os focos de queimadas
         setBurningPoints(points);
       } catch (error) {
         console.error('Erro ao carregar os dados de focos de queimadas:', error);
       }
     }
 
-    // Chamar a função para carregar os dados de focos de queimadas
+    // Chama a função para carregar os dados de focos de queimadas
     fetchBurningPoints();
   }, []);
 
   function handlePositionReceived({ coords }) {
     const { latitude, longitude } = coords;
     setLocation({ latitude, longitude });
+  }
+
+  function handlePositionError(error) {
+    console.error("Erro ao obter a localização:", error);
+  }
+
+  function handleMarkerClick(burningPointId) {
+    setSelectedBurningPoint(burningPointId);
+  }
+
+  function closePopup() {
+    setSelectedBurningPoint(null);
   }
 
   return (
@@ -63,10 +87,28 @@ function App() {
         >
           <NavigationControl style={{ marginTop: '80px' }} />
 
-          {/* Adicionar marcadores para cada foco de queimada */}
+          {/* Adiciona marcadores para cada foco de queimada */}
           {burningPoints.map((point, index) => (
-            <Marker key={index} longitude={point.lon} latitude={point.lat} anchor="bottom">
-              <FireIcon fontSize='large' color='error' />
+            <Marker key={point.id} longitude={point.lon} latitude={point.lat} anchor="bottom">
+              <FireIcon fontSize='large' color='error' onClick={() => handleMarkerClick(point.id)} />
+              {selectedBurningPoint === point.id && (
+                <Popup
+                  offsetTop={-30}
+                  longitude={point.lon}
+                  latitude={point.lat}
+                  onClose={closePopup}
+                  closeOnClick={false}
+                >
+                  <div>
+                    {/* Informações adicionais sobre a queimada*/}
+                    <h3>Informações sobre a queimada</h3>
+                    <h4>Município: {point.municipio}</h4>
+                    <h4>Estado: {point.estado}</h4>
+                    <h4>Data: {format(new Date(point.data), 'dd/MM/yyyy')} às {format(new Date(point.data), 'HH:mm:ss')}</h4>
+                    <h4>Bioma: {point.bioma}</h4>
+                  </div>
+                </Popup>
+              )}
             </Marker>
           ))}
           <Marker longitude={location.longitude} latitude={location.latitude} anchor="bottom">
