@@ -76,4 +76,4 @@ async function convertCSVtoJSON(csvFilePath, tmpPath) {
 }
 
 // Comente essa linha no ambiente de produção
-//downloadAndConvertCSV();
+// downloadAndConvertCSV();
