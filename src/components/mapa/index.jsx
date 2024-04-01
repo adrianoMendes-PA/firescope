@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Map, { Marker, NavigationControl, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import RoomIcon from '@mui/icons-material/Room';
+import PersonPinCircleSharpIcon from '@mui/icons-material/PersonPinCircleSharp';
 import FireIcon from '@mui/icons-material/LocalFireDepartmentOutlined'
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -117,8 +117,12 @@ function App() {
               )}
             </Marker>
           ))}
-          <Marker longitude={location.longitude} latitude={location.latitude} anchor="bottom">
-            <RoomIcon fontSize='large' color='primary' />
+          <Marker
+            longitude={location.longitude}
+            latitude={location.latitude}
+            anchor="top"
+          >
+            <PersonPinCircleSharpIcon fontSize='large' color='primary' />
           </Marker>
         </Map>
       ) : (
