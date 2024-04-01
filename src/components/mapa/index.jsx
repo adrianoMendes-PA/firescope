@@ -120,7 +120,7 @@ function App() {
           <Marker
             longitude={location.longitude}
             latitude={location.latitude}
-            anchor="top"
+            anchor="bottom"
           >
             <PersonPinCircleSharpIcon fontSize='large' color='primary' />
           </Marker>
