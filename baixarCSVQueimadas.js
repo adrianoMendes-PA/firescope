@@ -22,14 +22,13 @@ export async function downloadAndConvertCSV() {
 
         const downloadUrl = new URL(latestCSVLink, url).href;
         const csvFilePath = await downloadCSV(downloadUrl, tmpPath, agent);
-
         console.log('Arquivo CSV mais recente baixado com sucesso:', csvFilePath);
 
         const jsonFilePath = await convertCSVtoJSON(csvFilePath, tmpPath);
         console.log('Arquivo CSV convertido para JSON com sucesso:', jsonFilePath);
     } catch (error) {
         console.error('Erro ao baixar e converter o arquivo CSV:', error);
-        throw error; // Propagar o erro para o chamador, se necessário
+        throw error;
     }
 }
 
@@ -76,4 +75,4 @@ async function convertCSVtoJSON(csvFilePath, tmpPath) {
 }
 
 // Comente essa linha no ambiente de produção
-// downloadAndConvertCSV();
+downloadAndConvertCSV();
