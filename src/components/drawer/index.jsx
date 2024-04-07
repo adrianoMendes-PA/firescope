@@ -15,12 +15,12 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import DownloadingOutlinedIcon from '@mui/icons-material/DownloadingOutlined';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 import jsPDF from 'jspdf';
 
-const drawerWidth = 180;
+const drawerWidth = 170;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
@@ -196,26 +196,36 @@ const PersistentDrawerLeft = () => {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {['Download', 'Chart'].map((text, index) => (
-                        <ListItem key={text} disablePadding>
-                            <ListItemButton onClick={text === 'Download' ? downloadPDF : undefined}>
-                                {text === 'Download' ? (
-                                    // Ícone para Download
-                                    <ListItemIcon>
-                                        <DownloadingOutlinedIcon />
-                                    </ListItemIcon>
-                                ) : (
-                                    // Ícone para Chart com link para outra página
-                                    <Link to="/chart">
-                                        <ListItemIcon>
-                                            <BarChartOutlinedIcon />
-                                        </ListItemIcon>
-                                    </Link>
-                                )}
-                                <ListItemText primary={text} />
+                    <ListItem disablePadding>
+                        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <HomeOutlinedIcon />
+                                </ListItemIcon>
+                                <Typography sx={{ marginLeft: -1 }}>Início</Typography>
                             </ListItemButton>
-                        </ListItem>
-                    ))}
+                        </Link>
+                    </ListItem>
+                    <ListItem disablePadding>
+                        <Link style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <ListItemButton onClick={downloadPDF}>
+                                <ListItemIcon>
+                                    <FileDownloadIcon />
+                                </ListItemIcon>
+                                <Typography sx={{ marginLeft: -1 }}>Download</Typography>
+                            </ListItemButton>
+                        </Link>
+                    </ListItem>
+                    <ListItem disablePadding>
+                        <Link to="chart" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <BarChartOutlinedIcon />
+                                </ListItemIcon>
+                                <Typography sx={{ marginLeft: -1 }}>Gráfico</Typography>
+                            </ListItemButton>
+                        </Link>
+                    </ListItem>
                 </List>
             </Drawer>
             <Main open={open}>

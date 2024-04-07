@@ -1,13 +1,13 @@
 import React from "react";
-import Drawer from "./components/drawer"
-import Mapa from "./components/mapa"
+import Drawer from "./components/drawer";
 import Footer from "./components/footer";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
     <>
       <Drawer />
-      <Mapa />
+      <Outlet />
       <Footer />
     </>
   )
