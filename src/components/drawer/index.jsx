@@ -1,5 +1,6 @@
-import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import React, { useState } from 'react';
+import { styled } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,13 +12,13 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import DownloadingOutlinedIcon from '@mui/icons-material/DownloadingOutlined';
+import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
+import jsPDF from 'jspdf';
 
 const drawerWidth = 180;
 
@@ -66,9 +67,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-export default function PersistentDrawerLeft() {
-    const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+const PersistentDrawerLeft = () => {
+    const [open, setOpen] = useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -77,6 +77,85 @@ export default function PersistentDrawerLeft() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+
+    const downloadPDF = async () => {
+        try {
+            const response = await fetch('/latest.json');
+            const data = await response.json();
+
+            const doc = new jsPDF();
+
+            let y = 10;
+            let pageIndex = 1;
+
+            // Título
+            const titulo = 'Relatório de Queimadas';
+            const larguraTitulo = doc.getStringUnitWidth(titulo) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+            const centroPagina = doc.internal.pageSize.width / 2;
+            const posicaoTitulo = centroPagina - larguraTitulo / 2;
+
+            doc.setFontSize(16);
+            doc.text(titulo, posicaoTitulo, y);
+            doc.setFontSize(12);
+            y += 10;
+
+            data.forEach((queimada, index) => {
+                const dataHora = new Date(queimada.data_hora_gmt);
+                const dataFormatada = formatDate(dataHora);
+                const horaFormatada = formatTime(dataHora);
+
+                // Detalhes da queimada
+                const detalhes = [
+                    `Cidade: ${queimada.municipio}`,
+                    `Estado: ${queimada.estado}`,
+                    `Latitude: ${queimada.lat}`,
+                    `Longitude: ${queimada.lon}`,
+                    `Data e hora: ${dataFormatada} às ${horaFormatada}`,
+                    `Bioma: ${queimada.bioma}`
+                    // Adicionar mais informações conforme necessário
+                ];
+
+                const linhaAltura = 10; // Altura estimada de uma linha de texto
+                const alturaTotalDetalhes = detalhes.length * linhaAltura;
+
+                if (y + alturaTotalDetalhes > doc.internal.pageSize.height - 10) {
+                    doc.addPage(); // Adiciona uma nova página se não houver espaço suficiente
+                    pageIndex++;
+                    y = 10; // Reinicia a posição y na nova página
+                }
+
+                detalhes.forEach((detalhe, i) => {
+                    doc.text(detalhe, 10, y + i * linhaAltura);
+                });
+
+                y += alturaTotalDetalhes + 10; // Aumenta a posição y para a próxima seção
+            });
+
+            doc.save(`Relatório de Queimadas ${pageIndex}.pdf`);
+        } catch (error) {
+            console.error('Erro ao obter os dados:', error);
+        }
+    };
+
+
+    // Função para formatar a data
+    const formatDate = (date) => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+
+    // Função para formatar a hora
+    const formatTime = (date) => {
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        return `${hours}:${minutes}:${seconds}`;
+    };
+
+
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -112,17 +191,27 @@ export default function PersistentDrawerLeft() {
             >
                 <DrawerHeader>
                     <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                        <ChevronLeftIcon />
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {['Inbox', 'Starred'].map((text, index) => (
+                    {['Download', 'Chart'].map((text, index) => (
                         <ListItem key={text} disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                                </ListItemIcon>
+                            <ListItemButton onClick={text === 'Download' ? downloadPDF : undefined}>
+                                {text === 'Download' ? (
+                                    // Ícone para Download
+                                    <ListItemIcon>
+                                        <DownloadingOutlinedIcon />
+                                    </ListItemIcon>
+                                ) : (
+                                    // Ícone para Chart com link para outra página
+                                    <Link to="/chart">
+                                        <ListItemIcon>
+                                            <BarChartOutlinedIcon />
+                                        </ListItemIcon>
+                                    </Link>
+                                )}
                                 <ListItemText primary={text} />
                             </ListItemButton>
                         </ListItem>
@@ -134,4 +223,6 @@ export default function PersistentDrawerLeft() {
             </Main>
         </Box>
     );
-}
+};
+
+export default PersistentDrawerLeft;
