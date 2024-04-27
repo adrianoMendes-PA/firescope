@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
 import { format } from 'date-fns';
+import './style.css'
 
 function App() {
   const accessToken = import.meta.env.VITE_TOKEN_MAP_BOX;
@@ -42,9 +43,7 @@ function App() {
           data: point.data_hora_gmt,
           bioma: point.bioma
         }));
-
-        // Atualiza o estado com os focos de queimadas
-        setBurningPoints(points);
+        setBurningPoints(points.slice(0, 350)); // Limita a exibição inicial
       } catch (error) {
         console.error('Erro ao carregar os dados de focos de queimadas:', error);
       }
@@ -104,10 +103,11 @@ function App() {
                   onClose={closePopup}
                   closeOnClick={false}
                   anchor="bottom"
+                  className="custom-popup"
                 >
                   <div>
                     {/* Informações adicionais sobre a queimada*/}
-                    <h3>Informações sobre a queimada</h3>
+                    <h2>Informações</h2>
                     <h4>Município: {point.municipio}</h4>
                     <h4>Estado: {point.estado}</h4>
                     <h4>Data: {format(new Date(point.data), 'dd/MM/yyyy')} às {format(new Date(point.data), 'HH:mm:ss')}</h4>
