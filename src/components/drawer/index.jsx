@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
@@ -62,13 +62,12 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
 }));
 
-const PersistentDrawerLeft = () => {
-    const [open, setOpen] = useState(false);
+export default function PersistentDrawerLeft() {
+    const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -77,7 +76,6 @@ const PersistentDrawerLeft = () => {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-
 
     const downloadPDF = async () => {
         try {
@@ -155,8 +153,6 @@ const PersistentDrawerLeft = () => {
         return `${hours}:${minutes}:${seconds}`;
     };
 
-
-
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -197,34 +193,34 @@ const PersistentDrawerLeft = () => {
                 <Divider />
                 <List>
                     <ListItem disablePadding>
-                        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <HomeOutlinedIcon />
-                                </ListItemIcon>
-                                <Typography sx={{ marginLeft: -1 }}>Início</Typography>
-                            </ListItemButton>
-                        </Link>
+                        <ListItemButton component={Link} to="/">
+                            <ListItemIcon>
+                                <HomeOutlinedIcon />
+                            </ListItemIcon>
+                            <Typography variant="body1" sx={{ marginLeft: 1 }}>
+                                Início
+                            </Typography>
+                        </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding>
-                        <Link style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <ListItemButton onClick={downloadPDF}>
-                                <ListItemIcon>
-                                    <FileDownloadIcon />
-                                </ListItemIcon>
-                                <Typography sx={{ marginLeft: -1 }}>Download</Typography>
-                            </ListItemButton>
-                        </Link>
+                        <ListItemButton onClick={downloadPDF}>
+                            <ListItemIcon>
+                                <FileDownloadIcon />
+                            </ListItemIcon>
+                            <Typography variant="body1" sx={{ marginLeft: 1 }}>
+                                Relatório
+                            </Typography>
+                        </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding>
-                        <Link to="chart" style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <BarChartOutlinedIcon />
-                                </ListItemIcon>
-                                <Typography sx={{ marginLeft: -1 }}>Gráfico</Typography>
-                            </ListItemButton>
-                        </Link>
+                        <ListItemButton component={Link} to="chart">
+                            <ListItemIcon>
+                                <BarChartOutlinedIcon />
+                            </ListItemIcon>
+                            <Typography variant="body1" sx={{ marginLeft: 1 }}>
+                                Gráfico
+                            </Typography>
+                        </ListItemButton>
                     </ListItem>
                 </List>
             </Drawer>
@@ -233,6 +229,4 @@ const PersistentDrawerLeft = () => {
             </Main>
         </Box>
     );
-};
-
-export default PersistentDrawerLeft;
+}
