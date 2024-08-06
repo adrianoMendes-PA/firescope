@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import App from './App.jsx'
-import Chart from './pages/chart/index.jsx';
+// import Chart from './pages/chart/index.jsx';
 import ErrorPage from './pages/errorPage/index.jsx'
 import Mapa from './components/mapa/index.jsx'
 
@@ -18,10 +18,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <Mapa />
       },
-      {
-        path: "chart",
-        element: <Chart />
-      }
+      // {
+      //   path: "chart",
+      //   element: <Chart />
+      // }
     ]
   },
 ]);
