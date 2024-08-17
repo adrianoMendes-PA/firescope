@@ -197,7 +197,7 @@ export default function PersistentDrawerLeft() {
                             <ListItemIcon>
                                 <HomeOutlinedIcon />
                             </ListItemIcon>
-                            <Typography variant="body1" sx={{ marginLeft: 1 }}>
+                            <Typography variant="body1" sx={{ marginLeft: -2 }}>
                                 Início
                             </Typography>
                         </ListItemButton>
@@ -207,18 +207,18 @@ export default function PersistentDrawerLeft() {
                             <ListItemIcon>
                                 <FileDownloadIcon />
                             </ListItemIcon>
-                            <Typography variant="body1" sx={{ marginLeft: 1 }}>
+                            <Typography variant="body1" sx={{ marginLeft: -2 }}>
                                 Relatório
                             </Typography>
                         </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding>
-                        <ListItemButton component={Link} to="chart">
+                        <ListItemButton component={Link} to="dashboard">
                             <ListItemIcon>
                                 <BarChartOutlinedIcon />
                             </ListItemIcon>
-                            <Typography variant="body1" sx={{ marginLeft: 1 }}>
-                                Gráfico
+                            <Typography variant="body1" sx={{ marginLeft: -2 }}>
+                                Dashboard
                             </Typography>
                         </ListItemButton>
                     </ListItem>

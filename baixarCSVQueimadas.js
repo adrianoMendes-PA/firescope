@@ -3,7 +3,7 @@ import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import csvParser from 'csv-parser';
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 
 // Função para baixar o CSV mais recente e converter para JSON
 export async function downloadAndConvertCSV() {
@@ -11,8 +11,12 @@ export async function downloadAndConvertCSV() {
     const tmpPath = path.resolve('./public');
 
     try {
-        const agent = new https.Agent({ rejectUnauthorized: false });
-        const response = await axios.get(url, { httpsAgent: agent });
+        const agent = new https.Agent({
+            rejectUnauthorized: false
+        });
+        const response = await axios.get(url, {
+            httpsAgent: agent
+        });
         const html = response.data;
 
         const latestCSVLink = getLatestCSVLink(html, url);
@@ -39,7 +43,10 @@ function getLatestCSVLink(html, baseUrl) {
 
 async function downloadCSV(url, tmpPath, agent) {
     const csvFilePath = path.join(tmpPath, 'latest.csv');
-    const response = await axios.get(url, { responseType: 'stream', httpsAgent: agent });
+    const response = await axios.get(url, {
+        responseType: 'stream',
+        httpsAgent: agent
+    });
     const csvStream = fs.createWriteStream(csvFilePath);
     response.data.pipe(csvStream);
     await streamFinished(csvStream);
@@ -75,4 +82,4 @@ async function convertCSVtoJSON(csvFilePath, tmpPath) {
 }
 
 // Comentar quando for subir
-downloadAndConvertCSV();
+//downloadAndConvertCSV();
