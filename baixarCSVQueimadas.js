@@ -82,4 +82,4 @@ async function convertCSVtoJSON(csvFilePath, tmpPath) {
 }
 
 // Comentar quando for subir
-//downloadAndConvertCSV();
+downloadAndConvertCSV();
