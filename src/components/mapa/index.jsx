@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import Map, { Marker, NavigationControl, Popup } from 'react-map-gl';
+import Map, { NavigationControl, Source, Layer } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import PersonPinCircleSharpIcon from '@mui/icons-material/PersonPinCircleSharp';
-import FireIcon from '@mui/icons-material/LocalFireDepartmentOutlined'
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
-import { format } from 'date-fns';
-import './style.css'
+import './style.css';
 
 function App() {
   const accessToken = import.meta.env.VITE_TOKEN_MAP_BOX;
   const [location, setLocation] = useState({});
   const [burningPoints, setBurningPoints] = useState([]);
-  const [selectedBurningPoint, setSelectedBurningPoint] = useState(null);
 
   useEffect(() => {
     const options = {
@@ -27,29 +23,33 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // Função para carregar e processar os dados de focos de queimadas
     async function fetchBurningPoints() {
       try {
-        // Carrega o arquivo JSON usando a rota de servidor
         const response = await axios.get('/latest.json');
 
-        // Extrai os dados de focos de queimadas do objeto de resposta
         const points = response.data.map(point => ({
-          id: point.id,
-          lat: point.lat,
-          lon: point.lon,
-          municipio: point.municipio,
-          estado: point.estado,
-          data: point.data_hora_gmt,
-          bioma: point.bioma
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [point.lon, point.lat]
+          },
+          properties: {
+            municipio: point.municipio,
+            estado: point.estado,
+            data: point.data_hora_gmt,
+            bioma: point.bioma
+          }
         }));
-        setBurningPoints(points.slice(0, 350)); // Limita a exibição inicial
+
+        setBurningPoints({
+          type: 'FeatureCollection',
+          features: points
+        });
       } catch (error) {
         console.error('Erro ao carregar os dados de focos de queimadas:', error);
       }
     }
 
-    // Chama a função para carregar os dados de focos de queimadas
     fetchBurningPoints();
   }, []);
 
@@ -62,13 +62,33 @@ function App() {
     console.error("Erro ao obter a localização:", error);
   }
 
-  function handleMarkerClick(burningPointId) {
-    setSelectedBurningPoint(burningPointId);
-  }
-
-  function closePopup() {
-    setSelectedBurningPoint(null);
-  }
+  const heatmapLayer = {
+    id: 'burning-points-heat',
+    type: 'heatmap',
+    paint: {
+      // Ajusta a intensidade do calor
+      'heatmap-intensity': {
+        stops: [
+          [5, 1],
+          [15, 3]
+        ]
+      },
+      // Ajusta o raio do calor em função do zoom
+      'heatmap-radius': {
+        stops: [
+          [5, 15],
+          [15, 20]
+        ]
+      },
+      // Ajusta a opacidade do calor
+      'heatmap-opacity': {
+        stops: [
+          [14, 0.5],
+          [15, 0.3]
+        ]
+      }
+    }
+  };
 
   return (
     <>
@@ -86,44 +106,9 @@ function App() {
         >
           <NavigationControl style={{ marginTop: '80px' }} />
 
-          {/* Adiciona marcadores para cada foco de queimada */}
-          {burningPoints.map((point, index) => (
-            <Marker
-              key={point.id}
-              longitude={point.lon}
-              latitude={point.lat}
-              anchor="center"
-              style={{ cursor: "pointer" }}
-            >
-              <FireIcon fontSize='large' color='error' onClick={() => handleMarkerClick(point.id)} />
-              {selectedBurningPoint === point.id && (
-                <Popup
-                  longitude={point.lon}
-                  latitude={point.lat}
-                  onClose={closePopup}
-                  closeOnClick={false}
-                  anchor="bottom"
-                  className="custom-popup"
-                >
-                  <div>
-                    {/* Informações adicionais sobre a queimada*/}
-                    <h2>Informações</h2>
-                    <h4>Município: {point.municipio}</h4>
-                    <h4>Estado: {point.estado}</h4>
-                    <h4>Data: {format(new Date(point.data), 'dd/MM/yyyy')} às {format(new Date(point.data), 'HH:mm:ss')}</h4>
-                    <h4>Bioma: {point.bioma}</h4>
-                  </div>
-                </Popup>
-              )}
-            </Marker>
-          ))}
-          <Marker
-            longitude={location.longitude}
-            latitude={location.latitude}
-            anchor="bottom"
-          >
-            <PersonPinCircleSharpIcon fontSize='large' color='primary' />
-          </Marker>
+          <Source id="burning-points" type="geojson" data={burningPoints}>
+            <Layer {...heatmapLayer} />
+          </Source>
         </Map>
       ) : (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh', flexDirection: 'column' }}>
