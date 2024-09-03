@@ -2,7 +2,7 @@ name: Executar Script de Download de CSV
 
 on:
   schedule:
-    - cron: '35 20 * * *'  # Este cron rodará todos os dias às 20:05 UTC
+    - cron: '42 23 * * *'  # Este cron rodará todos os dias às 20:05 UTC
 
 jobs:
   baixar-csv:
