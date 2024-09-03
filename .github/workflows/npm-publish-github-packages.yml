@@ -1,0 +1,15 @@
+name: Executar Script de Download de CSV
+
+on:
+  schedule:
+    - cron: '5 20 * * *'  # Este cron rodará todos os dias à meia-noite (UTC)
+
+jobs:
+  baixar-csv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Instalar dependências
+        run: npm install
+      - name: Executar script de download
+        run: node ./baixarCSVQueimadas.js
