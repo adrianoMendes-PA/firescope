@@ -2,7 +2,7 @@ name: Executar Script de Download de CSV
 
 on:
   schedule:
-    - cron: '5 20 * * *'  # Este cron rodará todos os dias à meia-noite (UTC)
+    - cron: '20 20 * * *'  # Este cron rodará todos os dias à meia-noite (UTC)
 
 jobs:
   baixar-csv:
@@ -12,4 +12,4 @@ jobs:
       - name: Instalar dependências
         run: npm install
       - name: Executar script de download
-        run: node ./baixarCSVQueimadas.js
+        run: node ${{ github.workspace }}/baixarCSVQueimadas.js
