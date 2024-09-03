@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Map, { NavigationControl, Source, Layer } from 'react-map-gl';
+import Map, { NavigationControl, Source, Layer, Marker, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import PersonPinCircleSharpIcon from '@mui/icons-material/PersonPinCircleSharp';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
@@ -10,6 +11,7 @@ function App() {
   const accessToken = import.meta.env.VITE_TOKEN_MAP_BOX;
   const [location, setLocation] = useState({});
   const [burningPoints, setBurningPoints] = useState([]);
+  const [selectedPoint, setSelectedPoint] = useState(null);
 
   useEffect(() => {
     const options = {
@@ -34,6 +36,7 @@ function App() {
             coordinates: [point.lon, point.lat]
           },
           properties: {
+            id: point.id,
             municipio: point.municipio,
             estado: point.estado,
             data: point.data_hora_gmt,
@@ -66,21 +69,18 @@ function App() {
     id: 'burning-points-heat',
     type: 'heatmap',
     paint: {
-      // Ajusta a intensidade do calor
       'heatmap-intensity': {
         stops: [
           [5, 1],
           [15, 3]
         ]
       },
-      // Ajusta o raio do calor em função do zoom
       'heatmap-radius': {
         stops: [
           [5, 15],
           [15, 20]
         ]
       },
-      // Ajusta a opacidade do calor
       'heatmap-opacity': {
         stops: [
           [14, 0.5],
@@ -90,6 +90,32 @@ function App() {
     }
   };
 
+  const circleLayer = {
+    id: 'burning-points-circle',
+    type: 'circle',
+    paint: {
+      'circle-radius': 5,
+      'circle-color': 'rgba(0, 0, 0, 0)',
+      'circle-stroke-width': 1,
+      'circle-stroke-color': 'rgba(0, 0, 0, 0)'
+    }
+  };
+
+  function handleMapClick(event) {
+    const features = event.features;
+    if (features.length) {
+      const feature = features[0];
+      setSelectedPoint({
+        longitude: feature.geometry.coordinates[0],
+        latitude: feature.geometry.coordinates[1],
+        municipio: feature.properties.municipio,
+        estado: feature.properties.estado,
+        data: feature.properties.data,
+        bioma: feature.properties.bioma
+      });
+    }
+  }
+
   return (
     <>
       {location.latitude && location.longitude ? (
@@ -98,17 +124,49 @@ function App() {
           initialViewState={{
             longitude: location.longitude,
             latitude: location.latitude,
-            zoom: 5
+            zoom: 8
           }}
           style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}
           mapStyle="mapbox://styles/mapbox/dark-v11"
           scrollZoom={true}
+          interactiveLayerIds={['burning-points-circle']}
+          onClick={handleMapClick}
         >
           <NavigationControl style={{ marginTop: '80px' }} />
 
           <Source id="burning-points" type="geojson" data={burningPoints}>
             <Layer {...heatmapLayer} />
+            <Layer {...circleLayer} />
           </Source>
+
+          {selectedPoint && (
+            <Popup
+              longitude={selectedPoint.longitude}
+              latitude={selectedPoint.latitude}
+              onClose={() => setSelectedPoint(null)}
+              closeOnClick={false}
+              anchor="bottom"
+              className="custom-popup"
+            >
+              <div>
+                <h2>Informações sobre as queimadas</h2>
+                <h4>Município: {selectedPoint.municipio}</h4>
+                <h4>Estado: {selectedPoint.estado}</h4>
+                <h4>Data: {new Date(selectedPoint.data).toLocaleString()}</h4>
+                <h4>Bioma: {selectedPoint.bioma}</h4>
+              </div>
+            </Popup>
+          )}
+
+          {/* Marcador da sua localização */}
+          <Marker
+            longitude={location.longitude}
+            latitude={location.latitude}
+            anchor="bottom"
+          >
+            <PersonPinCircleSharpIcon fontSize='large' color='warning' />
+          </Marker>
+
         </Map>
       ) : (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh', flexDirection: 'column' }}>

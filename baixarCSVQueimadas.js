@@ -5,7 +5,7 @@ import path from 'path';
 import csvParser from 'csv-parser';
 import * as cheerio from 'cheerio';
 
-// Função para baixar o CSV mais recente e converter para JSON
+// Função para baixar o CSV mais recente e converter para JSON (MUITO CUIDADO AO MEXER NELA!!!)
 export async function downloadAndConvertCSV() {
     const url = 'https://dataserver-coids.inpe.br/queimadas/queimadas/focos/csv/diario/Brasil/';
     const tmpPath = path.resolve('./public');

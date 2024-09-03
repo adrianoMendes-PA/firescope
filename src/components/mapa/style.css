@@ -1,6 +1,7 @@
-.custom-popup {
+.mapboxgl-popup-content {
   border-radius: 10px !important;
-  padding: 10px
+  width: 300px !important;
+  padding: 10px !important;
+  overflow: auto !important;
+  max-width: 100% !important;
 }
-
-

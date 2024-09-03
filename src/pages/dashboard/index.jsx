@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, Card, CardContent, Typography, List, ListItem, ListItemText } from '@mui/material';
+import { Container, Grid, Card, CardContent, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 const Dashboard = () => {
   const [estadoComMaisFocos, setEstadoComMaisFocos] = useState('');
   const [municipioComMaisFocos, setMunicipioComMaisFocos] = useState('');
   const [biomaDoMunicipio, setBiomaDoMunicipio] = useState('');
+  const [totalFocosEstado, setTotalFocosEstado] = useState(0);
+  const [totalFocosMunicipio, setTotalFocosMunicipio] = useState(0);
   const [totalFocos, setTotalFocos] = useState(0);
-  const [dadosChart, setDadosChart] = useState([0, 0, 0, 0]);
+  const [dadosChart, setDadosChart] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -15,9 +17,7 @@ const Dashboard = () => {
         const response = await fetch('/latest.json');
         const data = await response.json();
 
-        let totalFocosEstado = 0;
-        let totalFocosMunicipio = 0;
-        let totalFocosBioma = 0;
+        let totalFocos = 0;
         let maxFocos = 0;
         let estadoEncontrado = '';
         let municipioEncontrado = '';
@@ -30,6 +30,7 @@ const Dashboard = () => {
 
         data.forEach(registro => {
           const focosQueimada = parseFloat(registro.frp) / 1000 || 0;
+          totalFocos += focosQueimada;
 
           if (focosQueimada > maxFocos) {
             maxFocos = focosQueimada;
@@ -53,23 +54,22 @@ const Dashboard = () => {
           }
 
           // Contagem de focos por bioma
-          // if (focosPorBioma[registro.bioma]) {
-          //   focosPorBioma[registro.bioma] += focosQueimada;
-          // } else {
-          //   focosPorBioma[registro.bioma] = focosQueimada;
-          // }
+          if (focosPorBioma[registro.bioma]) {
+            focosPorBioma[registro.bioma] += focosQueimada;
+          } else {
+            focosPorBioma[registro.bioma] = focosQueimada;
+          }
         });
 
-        totalFocosEstado = focosPorEstado[estadoEncontrado] || 0;
-        totalFocosMunicipio = focosPorMunicipio[municipioEncontrado] || 0;
-        totalFocosBioma = focosPorBioma[biomaEncontrado] || 0;
+        const totalFocosEstado = focosPorEstado[estadoEncontrado] || 0;
+        const totalFocosMunicipio = focosPorMunicipio[municipioEncontrado] || 0;
 
         setEstadoComMaisFocos(estadoEncontrado);
         setMunicipioComMaisFocos(municipioEncontrado);
         setBiomaDoMunicipio(biomaEncontrado);
-        setTotalFocos(maxFocos);
+        setTotalFocos(totalFocos);
 
-        setDadosChart([totalFocosEstado, totalFocosMunicipio, maxFocos]);
+        setDadosChart([totalFocosEstado, totalFocosMunicipio, totalFocos]);
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
       }
@@ -124,7 +124,7 @@ const Dashboard = () => {
                 Total de focos
               </Typography>
               <Typography variant="body2">
-                {totalFocos.toFixed(3)}
+                {new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(totalFocos)}
               </Typography>
             </CardContent>
           </Card>
@@ -151,15 +151,16 @@ const Dashboard = () => {
             margin={{ top: 20, bottom: 50, left: 60, right: 50 }}
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        {/*<Grid item xs={2} md={4}>
           <Card>
             <CardContent>
               <Typography sx={{ fontSize: 25 }} color="text.secondary" gutterBottom>
                 Satélites
               </Typography>
+             
             </CardContent>
           </Card>
-        </Grid>
+        </Grid>*/}
       </Grid>
     </Container>
   );
