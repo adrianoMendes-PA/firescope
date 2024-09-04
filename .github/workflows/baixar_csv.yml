@@ -1,11 +1,11 @@
-name: Executar Script de Download de JSON
+name: Executar Script de Download de CSV
 
 on:
   schedule:
-    - cron: '15 21 * * *'  # Ajuste o cron para UTC
+    - cron: '15 23 * * *'  # Ajuste o cron para o horário desejado
 
 jobs:
-  baixar-json:
+  baixar-csv:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -14,10 +14,15 @@ jobs:
       - name: Instalar dependências
         run: npm install
       
-      # Step 2: Executar o script para baixar o JSON
+      # Step 2: Executar o script para baixar o CSV e converter para JSON
       - name: Executar script de download
         run: node ./baixarCSVQueimadas.js
       
-      # Step 3: Verificar arquivo na pasta public
-      - name: Verificar arquivo na pasta public
-        run: ls -la ./public/latest.json
+      # Step 3: Commit e push das mudanças
+      - name: Adicionar alterações ao Git
+        run: |
+          git config --local user.email "adriano.alyson@gmail.com"
+          git config --local user.name "Adriano Mendes"
+          git add ./public/latest.json
+          git commit -m "latest.json atualizado"
+          git git push -u origin main
