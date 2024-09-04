@@ -2,23 +2,26 @@ name: Executar Script de Download de CSV
 
 on:
   schedule:
-    - cron: '55 23 * * *'  # Este cron rodará todos os dias às 20:05 UTC
+    - cron: '15 00 * * *'  # Ajuste o cron para 23:55 UTC
 
 jobs:
   baixar-csv:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Checkout do código do repositório
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       
-      # Step 2: Instalar dependências do projeto
+      # Step 1: Instalar dependências
       - name: Instalar dependências
         run: npm install
-
-      # Step 3: Listar os arquivos para verificar se o script está na raiz
-      - name: Verificar arquivos no diretório raiz
-        run: ls -la
-
-      # Step 4: Executar o script de download do CSV
+      
+      # Step 2: Executar o script para baixar o CSV
       - name: Executar script de download
         run: node ./baixarCSVQueimadas.js
+      
+      # Step 3: Mover o arquivo para a pasta public (se necessário)
+      - name: Mover arquivo para a pasta public
+        run: mv /home/runner/work/firescope/firescope/public/latest.json ./public/latest.json
+      
+      # Step 4: Confirmar que o arquivo foi movido corretamente (opcional)
+      - name: Verificar arquivo na pasta public
+        run: ls -la ./public/latest.json
