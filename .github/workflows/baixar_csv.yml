@@ -2,7 +2,7 @@ name: Executar Script de Download de JSON
 
 on:
   schedule:
-    - cron: '35 20 * * *'  # Ajuste o cron para UTC
+    - cron: '00 20 * * *'  # Ajuste o cron para UTC
 
 jobs:
   baixar-json:
