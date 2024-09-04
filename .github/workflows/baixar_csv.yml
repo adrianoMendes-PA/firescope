@@ -2,7 +2,7 @@ name: Executar Script de Download de CSV
 
 on:
   schedule:
-    - cron: '00 08 * * *'  # Ajuste o cron para às 8h UTC
+    - cron: '50 08 * * *'  # Ajuste o cron para às 8h UTC
 
 jobs:
   baixar-csv:
@@ -20,7 +20,7 @@ jobs:
       
       # Step 3: Mover o arquivo para a pasta public (se necessário)
       - name: Mover arquivo para a pasta public
-        run: mv /home/runner/work/firescope/firescope/public/latest.json ./public/latest.json
+        run: mv /home/runner/work/firescope/firescope/public/latest.json ./public
       
       # Step 4: Confirmar que o arquivo foi movido corretamente (opcional)
       - name: Verificar arquivo na pasta public
