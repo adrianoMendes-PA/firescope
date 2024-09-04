@@ -4,11 +4,17 @@ import fs from 'fs';
 import path from 'path';
 import csvParser from 'csv-parser';
 import * as cheerio from 'cheerio';
+import { fileURLToPath } from 'url';  // Importar funções para manipulação de URLs
+import { dirname } from 'path';       // Importar dirname
 
-// Função para baixar o CSV mais recente e converter para JSON (MUITO CUIDADO AO MEXER NELA!!!)
+// Construir o equivalente a __dirname para ES6
+const __filename = fileURLToPath(import.meta.url);  // Obter o nome do arquivo
+const __dirname = dirname(__filename);              // Obter o diretório
+
+// Função para baixar o CSV mais recente e converter para JSON
 export async function downloadAndConvertCSV() {
     const url = 'https://dataserver-coids.inpe.br/queimadas/queimadas/focos/csv/diario/Brasil/';
-    const tmpPath = path.resolve(__dirname, './public');
+    const tmpPath = path.resolve(__dirname, './public');  // Usar __dirname corretamente
 
     try {
         const agent = new https.Agent({
