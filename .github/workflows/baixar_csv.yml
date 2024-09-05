@@ -2,7 +2,7 @@ name: Executar Script de Download de CSV
 
 on:
   schedule:
-    - cron: '00 08 * * *'  # Ajuste o cron para o horário desejado
+    - cron: '00 08 * * *'
 
 jobs:
   baixar-csv:
@@ -10,15 +10,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      # Step 1: Instalar dependências
+      # Instala dependências
       - name: Instalar dependências
         run: npm install
       
-      # Step 2: Executar o script para baixar o CSV e converter para JSON
+      # Executa o script para baixar o CSV e converter para JSON
       - name: Executar script de download
         run: node ./baixarCSVQueimadas.js
       
-      # Step 3: Commit e push das mudanças
+      # Commit e push das mudanças
       - name: Adicionar alterações ao Git
         run: |
           git config --local user.email "adriano.alyson@gmail.com"
