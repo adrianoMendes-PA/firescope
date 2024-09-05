@@ -2,7 +2,7 @@ name: Executar Script de Download de CSV
 
 on:
   schedule:
-    - cron: '15 23 * * *'  # Ajuste o cron para o horário desejado
+    - cron: '25 01 * * *'  # Ajuste o cron para o horário desejado
 
 jobs:
   baixar-csv:
@@ -25,4 +25,4 @@ jobs:
           git config --local user.name "Adriano Mendes"
           git add ./public/latest.json
           git commit -m "latest.json atualizado"
-          git git push -u origin main
+          git push -u origin main
