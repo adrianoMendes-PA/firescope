@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import Map, { NavigationControl, Source, Layer, Marker, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -16,13 +17,35 @@ function App() {
   useEffect(() => {
     const options = {
       enableHighAccuracy: true,
-      timeout: 10000,
+      timeout: 10000, // Aumentado para 20 segundos
       maximumAge: 0
     };
 
-    const watchID = navigator.geolocation.watchPosition(handlePositionReceived, handlePositionError, options);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        handlePositionReceived(position);
+      },
+      (error) => {
+        handlePositionError(error);
+      },
+      options
+    );
+
+    const watchID = navigator.geolocation.watchPosition(
+      (position) => {
+        if (position.coords.accuracy > 10) {
+          console.log("Baixa precisão, aguardando por uma posição melhor...");
+          return; // Ignora localizações com precisão baixa (> 10 metros)
+        }
+        handlePositionReceived(position); // Precisão aceitável, processa a localização
+      },
+      handlePositionError,
+      options
+    );
+
     return () => navigator.geolocation.clearWatch(watchID);
   }, []);
+
 
   useEffect(() => {
     async function fetchBurningPoints() {
