@@ -17,7 +17,7 @@ function App() {
   useEffect(() => {
     const options = {
       enableHighAccuracy: true,
-      timeout: 10000, // Aumentado para 20 segundos
+      timeout: 10000,
       maximumAge: 0
     };
 
