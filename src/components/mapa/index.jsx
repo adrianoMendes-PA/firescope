@@ -142,7 +142,6 @@ function App() {
       if (mapRef.current) {
         mapRef.current.flyTo({
           center: [feature.geometry.coordinates[0], feature.geometry.coordinates[1]],
-          zoom: 10,
           essential: true // este argumento garante que a animação aconteça mesmo que o usuário tenha interações em andamento
         });
       }
