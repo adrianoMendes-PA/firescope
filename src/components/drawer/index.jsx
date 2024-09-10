@@ -78,65 +78,69 @@ export default function PersistentDrawerLeft() {
     };
 
     const downloadPDF = async () => {
-        try {
-            const response = await fetch('/latest.json');
-            const data = await response.json();
+    try {
+        const response = await fetch('/latest.json');
+        const data = await response.json();
 
-            const doc = new jsPDF();
+        const doc = new jsPDF();
 
-            let y = 10;
-            let pageIndex = 1;
+        let y = 10;
 
-            // Título
-            const titulo = 'Relatório de Queimadas';
-            const larguraTitulo = doc.getStringUnitWidth(titulo) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-            const centroPagina = doc.internal.pageSize.width / 2;
-            const posicaoTitulo = centroPagina - larguraTitulo / 2;
+        // Título
+        const titulo = 'Relatório de Queimadas';
+        const larguraTitulo = doc.getStringUnitWidth(titulo) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+        const centroPagina = doc.internal.pageSize.width / 2;
+        const posicaoTitulo = centroPagina - larguraTitulo / 2;
 
-            doc.setFontSize(16);
-            doc.text(titulo, posicaoTitulo, y);
-            doc.setFontSize(12);
-            y += 10;
+        doc.setFontSize(16);
+        doc.text(titulo, posicaoTitulo, y);
+        doc.setFontSize(12);
+        y += 10;
 
-            data.forEach((queimada, index) => {
-                const dataHora = new Date(queimada.data_hora_gmt);
-                const dataFormatada = formatDate(dataHora);
-                const horaFormatada = formatTime(dataHora);
+        // Contagem total de focos de queimadas
+        const totalFocos = data.length;
+        doc.text(`Total de focos de queimadas: ${totalFocos}`, 10, y);
+        y += 10;
 
-                // Detalhes da queimada
-                const detalhes = [
-                    `Cidade: ${queimada.municipio}`,
-                    `Estado: ${queimada.estado}`,
-                    `Latitude: ${queimada.lat}`,
-                    `Longitude: ${queimada.lon}`,
-                    `Data e hora: ${dataFormatada} às ${horaFormatada}`,
-                    `Bioma: ${queimada.bioma}`
-                    // Adicionar mais informações conforme necessário
-                ];
+        // Estado com mais focos
+        const focosPorEstado = data.reduce((acc, queimada) => {
+            acc[queimada.estado] = (acc[queimada.estado] || 0) + 1;
+            return acc;
+        }, {});
 
-                const linhaAltura = 10; // Altura estimada de uma linha de texto
-                const alturaTotalDetalhes = detalhes.length * linhaAltura;
+        const estadoComMaisFocos = Object.keys(focosPorEstado).reduce((a, b) => focosPorEstado[a] > focosPorEstado[b] ? a : b);
+        doc.text(`Estado com mais focos: ${estadoComMaisFocos} (${focosPorEstado[estadoComMaisFocos]} focos)`, 10, y);
+        y += 10;
 
-                if (y + alturaTotalDetalhes > doc.internal.pageSize.height - 10) {
-                    doc.addPage(); // Adiciona uma nova página se não houver espaço suficiente
-                    pageIndex++;
-                    y = 10; // Reinicia a posição y na nova página
-                }
+        // Município com mais focos
+        const focosPorMunicipio = data.reduce((acc, queimada) => {
+            acc[queimada.municipio] = (acc[queimada.municipio] || 0) + 1;
+            return acc;
+        }, {});
 
-                detalhes.forEach((detalhe, i) => {
-                    doc.text(detalhe, 10, y + i * linhaAltura);
-                });
+        const municipioComMaisFocos = Object.keys(focosPorMunicipio).reduce((a, b) => focosPorMunicipio[a] > focosPorMunicipio[b] ? a : b);
+        doc.text(`Município com mais focos: ${municipioComMaisFocos} (${focosPorMunicipio[municipioComMaisFocos]} focos)`, 10, y);
+        y += 10;
 
-                y += alturaTotalDetalhes + 10; // Aumenta a posição y para a próxima seção
-            });
+        // Texto sobre queimadas
+        const textoQueimadas = "As queimadas têm impacto significativo no meio ambiente, causando a destruição de habitats, aumentando a emissão de gases poluentes e contribuindo para mudanças climáticas.";
+        doc.text(textoQueimadas, 10, y, { maxWidth: 180 });
+        y += 20;
 
-            doc.save(`Relatório de Queimadas ${pageIndex}.pdf`);
-        } catch (error) {
-            console.error('Erro ao obter os dados:', error);
-        }
-    };
+        // Data do relatório
+        const dataRelatorio = new Date().toLocaleDateString();
+        doc.text(`Data do relatório: ${dataRelatorio}`, 10, y);
+        y += 10;
 
+        // Gerar URL Blob e abrir em nova aba
+        const pdfUrl = doc.output('bloburl');
+        window.open(pdfUrl, '_blank'); // Abre em nova aba
+    } catch (error) {
+        console.error('Erro ao obter os dados:', error);
+    }
+};
 
+    
     // Função para formatar a data
     const formatDate = (date) => {
         const day = String(date.getDate()).padStart(2, '0');
