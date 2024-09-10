@@ -94,13 +94,30 @@ export default function PersistentDrawerLeft() {
 
         doc.setFontSize(16);
         doc.text(titulo, posicaoTitulo, y);
+        y += 15;
+
+        // Texto sobre queimadas
+        const textoQueimadas = 
+        "As queimadas representam um dos maiores desafios ambientais da atualidade, com consequências " +
+        "severas para a biodiversidade, o equilíbrio dos ecossistemas e a qualidade de vida. Ao destruírem " +
+        "habitats naturais, elas ameaçam inúmeras espécies e provocam a fragmentação de ecossistemas " + 
+        "inteiros, dificultando a recuperação da flora e fauna locais. Além disso, as queimadas são " +
+        "responsáveis por liberar grandes quantidades de gases de efeito estufa, como o dióxido de carbono " +
+        "e o metano, agravando o aquecimento global e contribuindo diretamente para as mudanças " +
+        "climáticas. O aumento da poluição atmosférica causado por esse fenômeno também gera impactos " +
+        "na saúde humana, especialmente em comunidades próximas às áreas afetadas. Este relatório busca " +
+        "oferecer uma visão geral sobre a atual situação dos focos de queimadas, destacando os principais " +
+        "pontos de concentração, bem como o impacto ambiental associado.";
+
+        // Definir espaçamento e justificar
+        const lineHeight = 1.5;
         doc.setFontSize(12);
-        y += 10;
+        doc.setLineHeightFactor(lineHeight); // Definindo o espaçamento de 1,5
+        doc.text(textoQueimadas, 10, y, { maxWidth: 180, align: 'justify' });
+        y += 30; // Ajustar o espaçamento após o texto
 
         // Contagem total de focos de queimadas
         const totalFocos = data.length;
-        doc.text(`Total de focos de queimadas: ${totalFocos}`, 10, y);
-        y += 10;
 
         // Estado com mais focos
         const focosPorEstado = data.reduce((acc, queimada) => {
@@ -109,8 +126,6 @@ export default function PersistentDrawerLeft() {
         }, {});
 
         const estadoComMaisFocos = Object.keys(focosPorEstado).reduce((a, b) => focosPorEstado[a] > focosPorEstado[b] ? a : b);
-        doc.text(`Estado com mais focos: ${estadoComMaisFocos} (${focosPorEstado[estadoComMaisFocos]} focos)`, 10, y);
-        y += 10;
 
         // Município com mais focos
         const focosPorMunicipio = data.reduce((acc, queimada) => {
@@ -119,18 +134,28 @@ export default function PersistentDrawerLeft() {
         }, {});
 
         const municipioComMaisFocos = Object.keys(focosPorMunicipio).reduce((a, b) => focosPorMunicipio[a] > focosPorMunicipio[b] ? a : b);
-        doc.text(`Município com mais focos: ${municipioComMaisFocos} (${focosPorMunicipio[municipioComMaisFocos]} focos)`, 10, y);
-        y += 10;
 
-        // Texto sobre queimadas
-        const textoQueimadas = "As queimadas têm impacto significativo no meio ambiente, causando a destruição de habitats, aumentando a emissão de gases poluentes e contribuindo para mudanças climáticas.";
-        doc.text(textoQueimadas, 10, y, { maxWidth: 180 });
-        y += 20;
+        // Criar tabela
+        const tableColumn = ["Descrição", "Informação"];
+        const tableRows = [
+            ["Total de focos", totalFocos.toString()],
+            ["Estado com mais focos", `${estadoComMaisFocos} (${focosPorEstado[estadoComMaisFocos]} focos)`],
+            ["Município com mais focos", `${municipioComMaisFocos} (${focosPorMunicipio[municipioComMaisFocos]} focos)`]
+        ];
+
+        // Adicionar tabela ao PDF
+        y += 10; // Ajustar o espaçamento antes da tabela
+        doc.autoTable({
+            head: [tableColumn],
+            body: tableRows,
+            startY: y,
+            styles: { halign: 'center' }, // Centraliza o texto da tabela
+            theme: 'grid', // Adiciona bordas ao redor da tabela
+        });
 
         // Data do relatório
         const dataRelatorio = new Date().toLocaleDateString();
-        doc.text(`Data do relatório: ${dataRelatorio}`, 10, y);
-        y += 10;
+        doc.text(`Data do relatório: ${dataRelatorio}`, 10, doc.autoTable.previous.finalY + 10);
 
         // Gerar URL Blob e abrir em nova aba
         const pdfUrl = doc.output('bloburl');
