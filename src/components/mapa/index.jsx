@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Map, { NavigationControl, Source, Layer, Marker, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import PersonPinCircleSharpIcon from '@mui/icons-material/PersonPinCircleSharp';
@@ -13,6 +12,9 @@ function App() {
   const [location, setLocation] = useState({});
   const [burningPoints, setBurningPoints] = useState([]);
   const [selectedPoint, setSelectedPoint] = useState(null);
+
+  // Ref para o mapa
+  const mapRef = useRef();
 
   useEffect(() => {
     const options = {
@@ -45,7 +47,6 @@ function App() {
 
     return () => navigator.geolocation.clearWatch(watchID);
   }, []);
-
 
   useEffect(() => {
     async function fetchBurningPoints() {
@@ -136,6 +137,15 @@ function App() {
         data: feature.properties.data,
         bioma: feature.properties.bioma
       });
+
+      // Centralizando a tela no ponto clicado
+      if (mapRef.current) {
+        mapRef.current.flyTo({
+          center: [feature.geometry.coordinates[0], feature.geometry.coordinates[1]],
+          zoom: 10,
+          essential: true // este argumento garante que a animação aconteça mesmo que o usuário tenha interações em andamento
+        });
+      }
     }
   }
 
@@ -143,6 +153,7 @@ function App() {
     <>
       {location.latitude && location.longitude ? (
         <Map
+          ref={mapRef} // associando a ref ao mapa
           mapboxAccessToken={accessToken}
           initialViewState={{
             longitude: location.longitude,
