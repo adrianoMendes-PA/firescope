@@ -151,7 +151,7 @@ function App() {
     if (location.latitude && location.longitude && mapRef.current) {
       mapRef.current.flyTo({
         center: [location.longitude, location.latitude],
-        zoom: 12, // Nível de zoom que você deseja ao voltar para a localização
+        zoom: 8, // Nível de zoom que você deseja ao voltar para a localização
         essential: true
       });
     }
