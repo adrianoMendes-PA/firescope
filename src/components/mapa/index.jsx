@@ -146,6 +146,19 @@ function App() {
     }
   }
 
+  // Funções para alterar o cursor ao passar por um foco de queimada
+  function handleMouseEnter() {
+    if (mapRef.current) {
+      mapRef.current.getCanvas().style.cursor = 'pointer';
+    }
+  }
+
+  function handleMouseLeave() {
+    if (mapRef.current) {
+      mapRef.current.getCanvas().style.cursor = '';
+    }
+  }
+
   // Função para voltar à localização do usuário
   function handleReturnToLocation() {
     if (location.latitude && location.longitude && mapRef.current) {
@@ -173,6 +186,8 @@ function App() {
           scrollZoom={true}
           interactiveLayerIds={['burning-points-circle']}
           onClick={handleMapClick}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           <NavigationControl style={{ marginTop: '80px' }} />
 
