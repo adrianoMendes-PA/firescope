@@ -210,7 +210,7 @@ function App() {
           </Marker>
 
           {/* Ícone para voltar à localização do usuário */}
-          <div style={{ position: 'absolute', top: 10, left: 10 }}>
+          <div style={{ position: 'absolute', top: 90, left: 10 }}>
             <MyLocationIcon
               fontSize="large"
               color="primary"
