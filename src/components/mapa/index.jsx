@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import Map, { NavigationControl, Source, Layer, Marker, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import PersonPinCircleSharpIcon from '@mui/icons-material/PersonPinCircleSharp';
+import MyLocationIcon from '@mui/icons-material/MyLocation'; // Ícone de localização
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
@@ -12,9 +13,7 @@ function App() {
   const [location, setLocation] = useState({});
   const [burningPoints, setBurningPoints] = useState([]);
   const [selectedPoint, setSelectedPoint] = useState(null);
-
-  // Ref para o mapa
-  const mapRef = useRef();
+  const mapRef = useRef(); // Referência ao mapa
 
   useEffect(() => {
     const options = {
@@ -37,9 +36,9 @@ function App() {
       (position) => {
         if (position.coords.accuracy > 10) {
           console.log("Baixa precisão, aguardando por uma posição melhor...");
-          return; // Ignora localizações com precisão baixa (> 10 metros)
+          return;
         }
-        handlePositionReceived(position); // Precisão aceitável, processa a localização
+        handlePositionReceived(position);
       },
       handlePositionError,
       options
@@ -138,26 +137,23 @@ function App() {
         bioma: feature.properties.bioma
       });
 
-      // Centralizando a tela no ponto clicado
       if (mapRef.current) {
         mapRef.current.flyTo({
           center: [feature.geometry.coordinates[0], feature.geometry.coordinates[1]],
-          essential: true // este argumento garante que a animação aconteça mesmo que o usuário tenha interações em andamento
+          essential: true
         });
       }
     }
   }
 
-  // Funções para alterar o cursor ao passar por um foco de queimada
-  function handleMouseEnter() {
-    if (mapRef.current) {
-      mapRef.current.getCanvas().style.cursor = 'pointer';
-    }
-  }
-
-  function handleMouseLeave() {
-    if (mapRef.current) {
-      mapRef.current.getCanvas().style.cursor = '';
+  // Função para voltar à localização do usuário
+  function handleReturnToLocation() {
+    if (location.latitude && location.longitude && mapRef.current) {
+      mapRef.current.flyTo({
+        center: [location.longitude, location.latitude],
+        zoom: 12, // Nível de zoom que você deseja ao voltar para a localização
+        essential: true
+      });
     }
   }
 
@@ -165,7 +161,7 @@ function App() {
     <>
       {location.latitude && location.longitude ? (
         <Map
-          ref={mapRef} // associando a ref ao mapa
+          ref={mapRef}
           mapboxAccessToken={accessToken}
           initialViewState={{
             longitude: location.longitude,
@@ -177,8 +173,6 @@ function App() {
           scrollZoom={true}
           interactiveLayerIds={['burning-points-circle']}
           onClick={handleMapClick}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
         >
           <NavigationControl style={{ marginTop: '80px' }} />
 
@@ -215,6 +209,15 @@ function App() {
             <PersonPinCircleSharpIcon fontSize='large' color='warning' />
           </Marker>
 
+          {/* Ícone para voltar à localização do usuário */}
+          <div style={{ position: 'absolute', top: 10, left: 10 }}>
+            <MyLocationIcon
+              fontSize="large"
+              color="primary"
+              onClick={handleReturnToLocation}
+              style={{ cursor: 'pointer' }}
+            />
+          </div>
         </Map>
       ) : (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh', flexDirection: 'column' }}>
