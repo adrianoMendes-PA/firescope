@@ -155,7 +155,7 @@ export default function PersistentDrawerLeft() {
             const tableRows = [
                 ["Estado com mais focos", `${estadoComMaisFocos}: ${focosPorEstado[estadoComMaisFocos].toLocaleString('pt-BR')}`],
                 ["Município com mais focos", `${municipioComMaisFocos}: ${focosPorMunicipio[municipioComMaisFocos].toLocaleString('pt-BR')}`],
-                ["Bioma mais afetado", `${biomaMaisAfetado}: ${focosPorBioma[biomaMaisAfetado].toLocaleString('pt-BR') focos}`],
+                ["Bioma mais afetado", `${biomaMaisAfetado}: ${focosPorBioma[biomaMaisAfetado].toLocaleString('pt-BR')} focos`],
                 ["Total de focos", totalFocos.toLocaleString('pt-BR')]
             ];
 
