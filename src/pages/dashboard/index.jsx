@@ -11,7 +11,7 @@ const Dashboard = () => {
   const [totalFocos, setTotalFocos] = useState(0);
   const [dadosChart, setDadosChart] = useState([]);
 
-  useEffect(() => {
+ useEffect(() => {
   async function fetchData() {
     try {
       const response = await fetch('/latest.json');
@@ -52,14 +52,14 @@ const Dashboard = () => {
       // Encontrando o estado e município com mais focos
       let estadoComMaisFocos = Object.keys(focosPorEstado).reduce((a, b) => focosPorEstado[a] > focosPorEstado[b] ? a : b);
       let municipioComMaisFocos = Object.keys(focosPorMunicipio).reduce((a, b) => focosPorMunicipio[a] > focosPorMunicipio[b] ? a : b);
-      let biomaMaisAfetado = Object.keys(focosPorBioma).reduce((a, b) => focosPorBioma[a] > focosPorBioma[b] ? a : b);
+      let biomaEncontrado = Object.keys(focosPorBioma).reduce((a, b) => focosPorBioma[a] > focosPorBioma[b] ? a : b); // Corrigido para biomaEncontrado
 
       const totalFocosEstado = focosPorEstado[estadoComMaisFocos] || 0;
       const totalFocosMunicipio = focosPorMunicipio[municipioComMaisFocos] || 0;
 
       setEstadoComMaisFocos(estadoComMaisFocos);
       setMunicipioComMaisFocos(municipioComMaisFocos);
-      setBiomaDoMunicipio(biomaMaisAfetado);
+      setBiomaDoMunicipio(biomaEncontrado); // Atualizado para biomaEncontrado
       setTotalFocos(totalFocos);
 
       // Atualizando dados para o gráfico
