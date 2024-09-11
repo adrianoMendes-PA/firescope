@@ -19,6 +19,7 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const drawerWidth = 170;
 
@@ -77,110 +78,98 @@ export default function PersistentDrawerLeft() {
         setOpen(false);
     };
 
+
     const downloadPDF = async () => {
-    try {
-        const response = await fetch('/latest.json');
-        const data = await response.json();
+        try {
+            const response = await fetch('/latest.json');
+            const data = await response.json();
 
-        const doc = new jsPDF();
+            const doc = new jsPDF();
 
-        let y = 10;
+            let y = 20;
 
-        // Título
-        const titulo = 'Relatório de Queimadas';
-        const larguraTitulo = doc.getStringUnitWidth(titulo) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-        const centroPagina = doc.internal.pageSize.width / 2;
-        const posicaoTitulo = centroPagina - larguraTitulo / 2;
+            // Título
+            const titulo = 'Relatório de Queimadas';
+            const larguraTitulo = doc.getStringUnitWidth(titulo) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+            const centroPagina = doc.internal.pageSize.width / 2;
+            const posicaoTitulo = centroPagina - larguraTitulo / 2;
 
-        doc.setFontSize(16);
-        doc.text(titulo, posicaoTitulo, y);
-        y += 15;
+            doc.setFontSize(16);
+            doc.text(titulo, posicaoTitulo, y);
+            y += 15;
 
-        // Texto sobre queimadas
-        const textoQueimadas = 
-        "As queimadas representam um dos maiores desafios ambientais da atualidade, com consequências " +
-        "severas para a biodiversidade, o equilíbrio dos ecossistemas e a qualidade de vida. Ao destruírem " +
-        "habitats naturais, elas ameaçam inúmeras espécies e provocam a fragmentação de ecossistemas " + 
-        "inteiros, dificultando a recuperação da flora e fauna locais. Além disso, as queimadas são " +
-        "responsáveis por liberar grandes quantidades de gases de efeito estufa, como o dióxido de carbono " +
-        "e o metano, agravando o aquecimento global e contribuindo diretamente para as mudanças " +
-        "climáticas. O aumento da poluição atmosférica causado por esse fenômeno também gera impactos " +
-        "na saúde humana, especialmente em comunidades próximas às áreas afetadas. Este relatório busca " +
-        "oferecer uma visão geral sobre a atual situação dos focos de queimadas, destacando os principais " +
-        "pontos de concentração, bem como o impacto ambiental associado.";
+            // Texto sobre queimadas
+            const textoQueimadas =
+                "As queimadas representam um dos maiores desafios ambientais da atualidade, com consequências " +
+                "severas para a biodiversidade, o equilíbrio dos ecossistemas e a qualidade de vida. Ao destruírem " +
+                "habitats naturais, elas ameaçam inúmeras espécies e provocam a fragmentação de ecossistemas " +
+                "inteiros, dificultando a recuperação da flora e fauna locais. Além disso, as queimadas são " +
+                "responsáveis por liberar grandes quantidades de gases de efeito estufa, como o dióxido de carbono " +
+                "e o metano, agravando o aquecimento global e contribuindo diretamente para as mudanças " +
+                "climáticas. O aumento da poluição atmosférica causado por esse fenômeno também gera impactos " +
+                "na saúde humana, especialmente em comunidades próximas às áreas afetadas. Este relatório busca " +
+                "oferecer uma visão geral sobre a atual situação dos focos de queimadas, destacando os principais " +
+                "pontos de concentração.";
 
-        // Definir espaçamento e justificar
-        const lineHeight = 1.5;
-        doc.setFontSize(12);
-        doc.setLineHeightFactor(lineHeight); // Definindo o espaçamento de 1,5
-        doc.text(textoQueimadas, 10, y, { maxWidth: 180, align: 'justify' });
-        y += 30; // Ajustar o espaçamento após o texto
+            // Definir espaçamento e justificar
+            const lineHeight = 1.5;
+            doc.setFontSize(12);
+            doc.setLineHeightFactor(lineHeight); 
+            const textHeight = doc.getTextDimensions(textoQueimadas).h * lineHeight;
 
-        // Contagem total de focos de queimadas
-        const totalFocos = data.length;
+            doc.text(textoQueimadas, 10, y, { maxWidth: 180, align: 'justify' });
+            y += textHeight + 65; // Ajustar o espaçamento após o texto com base na altura do texto
 
-        // Estado com mais focos
-        const focosPorEstado = data.reduce((acc, queimada) => {
-            acc[queimada.estado] = (acc[queimada.estado] || 0) + 1;
-            return acc;
-        }, {});
+            // Contagem total de focos de queimadas
+            const totalFocos = data.length;
 
-        const estadoComMaisFocos = Object.keys(focosPorEstado).reduce((a, b) => focosPorEstado[a] > focosPorEstado[b] ? a : b);
+            // Estado com mais focos
+            const focosPorEstado = data.reduce((acc, queimada) => {
+                acc[queimada.estado] = (acc[queimada.estado] || 0) + 1;
+                return acc;
+            }, {});
 
-        // Município com mais focos
-        const focosPorMunicipio = data.reduce((acc, queimada) => {
-            acc[queimada.municipio] = (acc[queimada.municipio] || 0) + 1;
-            return acc;
-        }, {});
+            const estadoComMaisFocos = Object.keys(focosPorEstado).reduce((a, b) => focosPorEstado[a] > focosPorEstado[b] ? a : b);
 
-        const municipioComMaisFocos = Object.keys(focosPorMunicipio).reduce((a, b) => focosPorMunicipio[a] > focosPorMunicipio[b] ? a : b);
+            // Município com mais focos
+            const focosPorMunicipio = data.reduce((acc, queimada) => {
+                acc[queimada.municipio] = (acc[queimada.municipio] || 0) + 1;
+                return acc;
+            }, {});
 
-        // Criar tabela
-        const tableColumn = ["Descrição", "Informação"];
-        const tableRows = [
-            ["Total de focos", totalFocos.toString()],
-            ["Estado com mais focos", `${estadoComMaisFocos} (${focosPorEstado[estadoComMaisFocos]} focos)`],
-            ["Município com mais focos", `${municipioComMaisFocos} (${focosPorMunicipio[municipioComMaisFocos]} focos)`]
-        ];
+            const municipioComMaisFocos = Object.keys(focosPorMunicipio).reduce((a, b) => focosPorMunicipio[a] > focosPorMunicipio[b] ? a : b);
 
-        // Adicionar tabela ao PDF
-        y += 10; // Ajustar o espaçamento antes da tabela
-        doc.autoTable({
-            head: [tableColumn],
-            body: tableRows,
-            startY: y,
-            styles: { halign: 'center' }, // Centraliza o texto da tabela
-            theme: 'grid', // Adiciona bordas ao redor da tabela
-        });
+            // Criar tabela
+            const tableColumn = ["Descrição", "Informação"];
+            const tableRows = [
+                ["Estado com mais focos", `${estadoComMaisFocos}: ${focosPorEstado[estadoComMaisFocos].toLocaleString('pt-BR')}`],
+                ["Município com mais focos", `${municipioComMaisFocos}: ${focosPorMunicipio[municipioComMaisFocos].toLocaleString('pt-BR')}`],
+                ["Total de focos", totalFocos.toLocaleString('pt-BR')]
+            ];
 
-        // Data do relatório
-        const dataRelatorio = new Date().toLocaleDateString();
-        doc.text(`Data do relatório: ${dataRelatorio}`, 10, doc.autoTable.previous.finalY + 10);
+            // Adicionar tabela ao PDF
+            doc.autoTable({
+                head: [tableColumn],
+                body: tableRows,
+                startY: y, 
+                styles: { halign: 'center' }, 
+                theme: 'grid',
+                tableWidth: 'auto',
+                margin: { left: 10, right: 16 },
+            });
 
-        // Gerar URL Blob e abrir em nova aba
-        const pdfUrl = doc.output('bloburl');
-        window.open(pdfUrl, '_blank'); // Abre em nova aba
-    } catch (error) {
-        console.error('Erro ao obter os dados:', error);
-    }
-};
+            // Data do relatório
+            const dataRelatorio = new Date().toLocaleDateString();
+            doc.text(`Data do relatório: ${dataRelatorio}`, 10, doc.autoTable.previous.finalY + 35);
 
-    
-    // Função para formatar a data
-    const formatDate = (date) => {
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
+            // Gerar URL Blob e abrir em nova aba
+            const pdfUrl = doc.output('bloburl');
+            window.open(pdfUrl, '_blank');
+        } catch (error) {
+            console.error('Erro ao obter os dados:', error);
+        }
     };
 
-    // Função para formatar a hora
-    const formatTime = (date) => {
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        const seconds = String(date.getSeconds()).padStart(2, '0');
-        return `${hours}:${minutes}:${seconds}`;
-    };
 
     return (
         <Box sx={{ display: 'flex' }}>
