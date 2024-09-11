@@ -5,73 +5,60 @@ import { BarChart } from '@mui/x-charts/BarChart';
 const Dashboard = () => {
   const [estadoComMaisFocos, setEstadoComMaisFocos] = useState('');
   const [municipioComMaisFocos, setMunicipioComMaisFocos] = useState('');
-  const [biomaDoMunicipio, setBiomaDoMunicipio] = useState('');
-  const [totalFocosEstado, setTotalFocosEstado] = useState(0);
-  const [totalFocosMunicipio, setTotalFocosMunicipio] = useState(0);
+  const [biomaMaisAfetado, setBiomaMaisAfetado] = useState('');
   const [totalFocos, setTotalFocos] = useState(0);
   const [dadosChart, setDadosChart] = useState([]);
 
- useEffect(() => {
-  async function fetchData() {
-    try {
-      const response = await fetch('/latest.json');
-      const data = await response.json();
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('/latest.json');
+        const data = await response.json();
 
-      let totalFocos = 0;
-      let focosPorEstado = {};
-      let focosPorMunicipio = {};
-      let focosPorBioma = {};
+        let totalFocos = 0;
+        let focosPorEstado = {};
+        let focosPorMunicipio = {};
+        let focosPorBioma = {};
 
-      // Contagem de focos por estado, município e bioma
-      data.forEach(registro => {
-        const focosQueimada = parseFloat(registro.frp) / 1000 || 0;
-        totalFocos += focosQueimada;
+        // Contagem de focos por estado, município e bioma
+        data.forEach(registro => {
+          const focosQueimada = parseFloat(registro.frp) / 1000 || 0;
+          totalFocos += focosQueimada;
 
-        // Contagem de focos por estado
-        if (focosPorEstado[registro.estado]) {
-          focosPorEstado[registro.estado] += focosQueimada;
-        } else {
-          focosPorEstado[registro.estado] = focosQueimada;
-        }
+          // Contagem de focos por estado
+          focosPorEstado[registro.estado] = (focosPorEstado[registro.estado] || 0) + focosQueimada;
 
-        // Contagem de focos por município
-        if (focosPorMunicipio[registro.municipio]) {
-          focosPorMunicipio[registro.municipio] += focosQueimada;
-        } else {
-          focosPorMunicipio[registro.municipio] = focosQueimada;
-        }
+          // Contagem de focos por município
+          focosPorMunicipio[registro.municipio] = (focosPorMunicipio[registro.municipio] || 0) + focosQueimada;
 
-        // Contagem de focos por bioma
-        if (focosPorBioma[registro.bioma]) {
-          focosPorBioma[registro.bioma] += focosQueimada;
-        } else {
-          focosPorBioma[registro.bioma] = focosQueimada;
-        }
-      });
+          // Contagem de focos por bioma
+          focosPorBioma[registro.bioma] = (focosPorBioma[registro.bioma] || 0) + focosQueimada;
+        });
 
-      // Encontrando o estado e município com mais focos
-      let estadoComMaisFocos = Object.keys(focosPorEstado).reduce((a, b) => focosPorEstado[a] > focosPorEstado[b] ? a : b);
-      let municipioComMaisFocos = Object.keys(focosPorMunicipio).reduce((a, b) => focosPorMunicipio[a] > focosPorMunicipio[b] ? a : b);
-      let biomaEncontrado = Object.keys(focosPorBioma).reduce((a, b) => focosPorBioma[a] > focosPorBioma[b] ? a : b); // Corrigido para biomaEncontrado
+        // Encontrando o estado com mais focos
+        let estadoComMaisFocos = Object.keys(focosPorEstado).reduce((a, b) => focosPorEstado[a] > focosPorEstado[b] ? a : b);
 
-      const totalFocosEstado = focosPorEstado[estadoComMaisFocos] || 0;
-      const totalFocosMunicipio = focosPorMunicipio[municipioComMaisFocos] || 0;
+        // Encontrando o município com mais focos
+        let municipioComMaisFocos = Object.keys(focosPorMunicipio).reduce((a, b) => focosPorMunicipio[a] > focosPorMunicipio[b] ? a : b);
 
-      setEstadoComMaisFocos(estadoComMaisFocos);
-      setMunicipioComMaisFocos(municipioComMaisFocos);
-      setBiomaDoMunicipio(biomaEncontrado); // Atualizado para biomaEncontrado
-      setTotalFocos(totalFocos);
+        // Encontrando o bioma mais afetado
+        let biomaMaisAfetado = Object.keys(focosPorBioma).reduce((a, b) => focosPorBioma[a] > focosPorBioma[b] ? a : b);
 
-      // Atualizando dados para o gráfico
-      setDadosChart([totalFocosEstado, totalFocosMunicipio, totalFocos]);
-    } catch (error) {
-      console.error("Erro ao buscar dados:", error);
+        // Atualizando os estados
+        setEstadoComMaisFocos(estadoComMaisFocos);
+        setMunicipioComMaisFocos(municipioComMaisFocos);
+        setBiomaMaisAfetado(biomaMaisAfetado);
+        setTotalFocos(totalFocos);
+
+        // Atualizando dados para o gráfico
+        setDadosChart([focosPorEstado[estadoComMaisFocos], focosPorMunicipio[municipioComMaisFocos], totalFocos]);
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+      }
     }
-  }
 
-  fetchData();
-}, []);
-
+    fetchData();
+  }, []);
 
   return (
     <Container>
@@ -107,7 +94,7 @@ const Dashboard = () => {
                 Bioma
               </Typography>
               <Typography variant="body2">
-                {biomaDoMunicipio}
+                {biomaMaisAfetado}
               </Typography>
             </CardContent>
           </Card>
@@ -146,16 +133,6 @@ const Dashboard = () => {
             margin={{ top: 20, bottom: 50, left: 60, right: 50 }}
           />
         </Grid>
-        {/*<Grid item xs={2} md={4}>
-          <Card>
-            <CardContent>
-              <Typography sx={{ fontSize: 25 }} color="text.secondary" gutterBottom>
-                Satélites
-              </Typography>
-             
-            </CardContent>
-          </Card>
-        </Grid>*/}
       </Grid>
     </Container>
   );
