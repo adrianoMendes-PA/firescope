@@ -129,6 +129,7 @@ export default function PersistentDrawerLeft() {
                 return acc;
             }, {});
 
+            // Encontrando o estado com mais focos
             const estadoComMaisFocos = Object.keys(focosPorEstado).reduce((a, b) => focosPorEstado[a] > focosPorEstado[b] ? a : b);
 
             // Município com mais focos
@@ -137,13 +138,24 @@ export default function PersistentDrawerLeft() {
                 return acc;
             }, {});
 
+            // Encontrando o município com mais focos
             const municipioComMaisFocos = Object.keys(focosPorMunicipio).reduce((a, b) => focosPorMunicipio[a] > focosPorMunicipio[b] ? a : b);
+
+             // Contagem de focos por bioma
+            const focosPorBioma = data.reduce((acc, queimada) => {
+                acc[queimada.bioma] = (acc[queimada.bioma] || 0) + 1;
+                return acc;
+            }, {});
+
+            // Encontrando o bioma mais afetado
+            const biomaMaisAfetado = Object.keys(focosPorBioma).reduce((a, b) => focosPorBioma[a] > focosPorBioma[b] ? a : b);
 
             // Criar tabela
             const tableColumn = ["Descrição", "Informação"];
             const tableRows = [
                 ["Estado com mais focos", `${estadoComMaisFocos}: ${focosPorEstado[estadoComMaisFocos].toLocaleString('pt-BR')}`],
                 ["Município com mais focos", `${municipioComMaisFocos}: ${focosPorMunicipio[municipioComMaisFocos].toLocaleString('pt-BR')}`],
+                ["Bioma mais afetado", `${biomaMaisAfetado}: ${focosPorBioma[biomaMaisAfetado]}`],
                 ["Total de focos", totalFocos.toLocaleString('pt-BR')]
             ];
 
