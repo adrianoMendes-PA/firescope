@@ -107,7 +107,7 @@ const Dashboard = () => {
                 Total de focos
               </Typography>
               <Typography variant="body2">
-                {new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(totalFocos)}
+                {new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 }).format(totalFocos)}
               </Typography>
             </CardContent>
           </Card>
