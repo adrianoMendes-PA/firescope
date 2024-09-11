@@ -15,36 +15,37 @@ const Dashboard = () => {
         const response = await fetch('/latest.json');
         const data = await response.json();
 
-        let totalFocos = 0;
-        let focosPorEstado = {};
-        let focosPorMunicipio = {};
-        let focosPorBioma = {};
+        // Contagem total de focos de queimadas
+        const totalFocos = data.length;
 
-        // Contagem de focos por estado, município e bioma
-        data.forEach(registro => {
-          const focosQueimada = parseFloat(registro.frp) / 1000 || 0;
-          totalFocos += focosQueimada;
-
-          // Contagem de focos por estado
-          focosPorEstado[registro.estado] = (focosPorEstado[registro.estado] || 0) + focosQueimada;
-
-          // Contagem de focos por município
-          focosPorMunicipio[registro.municipio] = (focosPorMunicipio[registro.municipio] || 0) + focosQueimada;
-
-          // Contagem de focos por bioma
-          focosPorBioma[registro.bioma] = (focosPorBioma[registro.bioma] || 0) + focosQueimada;
-        });
+        // Contagem de focos por estado
+        const focosPorEstado = data.reduce((acc, queimada) => {
+          acc[queimada.estado] = (acc[queimada.estado] || 0) + 1;
+          return acc;
+        }, {});
 
         // Encontrando o estado com mais focos
-        let estadoComMaisFocos = Object.keys(focosPorEstado).reduce((a, b) => focosPorEstado[a] > focosPorEstado[b] ? a : b);
+        const estadoComMaisFocos = Object.keys(focosPorEstado).reduce((a, b) => focosPorEstado[a] > focosPorEstado[b] ? a : b);
+
+        // Contagem de focos por município
+        const focosPorMunicipio = data.reduce((acc, queimada) => {
+          acc[queimada.municipio] = (acc[queimada.municipio] || 0) + 1;
+          return acc;
+        }, {});
 
         // Encontrando o município com mais focos
-        let municipioComMaisFocos = Object.keys(focosPorMunicipio).reduce((a, b) => focosPorMunicipio[a] > focosPorMunicipio[b] ? a : b);
+        const municipioComMaisFocos = Object.keys(focosPorMunicipio).reduce((a, b) => focosPorMunicipio[a] > focosPorMunicipio[b] ? a : b);
+
+        // Contagem de focos por bioma
+        const focosPorBioma = data.reduce((acc, queimada) => {
+          acc[queimada.bioma] = (acc[queimada.bioma] || 0) + 1;
+          return acc;
+        }, {});
 
         // Encontrando o bioma mais afetado
-        let biomaMaisAfetado = Object.keys(focosPorBioma).reduce((a, b) => focosPorBioma[a] > focosPorBioma[b] ? a : b);
+        const biomaMaisAfetado = Object.keys(focosPorBioma).reduce((a, b) => focosPorBioma[a] > focosPorBioma[b] ? a : b);
 
-        // Atualizando os estados
+        // Atualizando estados
         setEstadoComMaisFocos(estadoComMaisFocos);
         setMunicipioComMaisFocos(municipioComMaisFocos);
         setBiomaMaisAfetado(biomaMaisAfetado);
