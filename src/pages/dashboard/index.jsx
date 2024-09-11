@@ -12,71 +12,66 @@ const Dashboard = () => {
   const [dadosChart, setDadosChart] = useState([]);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch('/latest.json');
-        const data = await response.json();
+  async function fetchData() {
+    try {
+      const response = await fetch('/latest.json');
+      const data = await response.json();
 
-        let totalFocos = 0;
-        let maxFocos = 0;
-        let estadoEncontrado = '';
-        let municipioEncontrado = '';
-        let biomaEncontrado = '';
+      let totalFocos = 0;
+      let focosPorEstado = {};
+      let focosPorMunicipio = {};
+      let focosPorBioma = {};
 
-        // Inicializando um mapa para contar os focos de cada categoria
-        let focosPorEstado = {};
-        let focosPorMunicipio = {};
-        let focosPorBioma = {};
+      // Contagem de focos por estado, município e bioma
+      data.forEach(registro => {
+        const focosQueimada = parseFloat(registro.frp) / 1000 || 0;
+        totalFocos += focosQueimada;
 
-        data.forEach(registro => {
-          const focosQueimada = parseFloat(registro.frp) / 1000 || 0;
-          totalFocos += focosQueimada;
+        // Contagem de focos por estado
+        if (focosPorEstado[registro.estado]) {
+          focosPorEstado[registro.estado] += focosQueimada;
+        } else {
+          focosPorEstado[registro.estado] = focosQueimada;
+        }
 
-          if (focosQueimada > maxFocos) {
-            maxFocos = focosQueimada;
-            estadoEncontrado = registro.estado;
-            municipioEncontrado = registro.municipio;
-            biomaEncontrado = registro.bioma;
-          }
+        // Contagem de focos por município
+        if (focosPorMunicipio[registro.municipio]) {
+          focosPorMunicipio[registro.municipio] += focosQueimada;
+        } else {
+          focosPorMunicipio[registro.municipio] = focosQueimada;
+        }
 
-          // Contagem de focos por estado
-          if (focosPorEstado[registro.estado]) {
-            focosPorEstado[registro.estado] += focosQueimada;
-          } else {
-            focosPorEstado[registro.estado] = focosQueimada;
-          }
+        // Contagem de focos por bioma
+        if (focosPorBioma[registro.bioma]) {
+          focosPorBioma[registro.bioma] += focosQueimada;
+        } else {
+          focosPorBioma[registro.bioma] = focosQueimada;
+        }
+      });
 
-          // Contagem de focos por município
-          if (focosPorMunicipio[registro.municipio]) {
-            focosPorMunicipio[registro.municipio] += focosQueimada;
-          } else {
-            focosPorMunicipio[registro.municipio] = focosQueimada;
-          }
+      // Encontrando o estado e município com mais focos
+      let estadoComMaisFocos = Object.keys(focosPorEstado).reduce((a, b) => focosPorEstado[a] > focosPorEstado[b] ? a : b);
+      let municipioComMaisFocos = Object.keys(focosPorMunicipio).reduce((a, b) => focosPorMunicipio[a] > focosPorMunicipio[b] ? a : b);
+      let biomaMaisAfetado = Object.keys(focosPorBioma).reduce((a, b) => focosPorBioma[a] > focosPorBioma[b] ? a : b);
 
-          // Contagem de focos por bioma
-          if (focosPorBioma[registro.bioma]) {
-            focosPorBioma[registro.bioma] += focosQueimada;
-          } else {
-            focosPorBioma[registro.bioma] = focosQueimada;
-          }
-        });
+      const totalFocosEstado = focosPorEstado[estadoComMaisFocos] || 0;
+      const totalFocosMunicipio = focosPorMunicipio[municipioComMaisFocos] || 0;
 
-        const totalFocosEstado = focosPorEstado[estadoEncontrado] || 0;
-        const totalFocosMunicipio = focosPorMunicipio[municipioEncontrado] || 0;
+      setEstadoComMaisFocos(estadoComMaisFocos);
+      setMunicipioComMaisFocos(municipioComMaisFocos);
+      setBiomaDoMunicipio(biomaMaisAfetado);
+      setTotalFocos(totalFocos);
 
-        setEstadoComMaisFocos(estadoEncontrado);
-        setMunicipioComMaisFocos(municipioEncontrado);
-        setBiomaDoMunicipio(biomaEncontrado);
-        setTotalFocos(totalFocos);
-
-        setDadosChart([totalFocosEstado, totalFocosMunicipio, totalFocos]);
-      } catch (error) {
-        console.error("Erro ao buscar dados:", error);
-      }
+      // Atualizando dados para o gráfico
+      setDadosChart([totalFocosEstado, totalFocosMunicipio, totalFocos]);
+    } catch (error) {
+      console.error("Erro ao buscar dados:", error);
     }
+  }
 
-    fetchData();
-  }, []);
+  fetchData();
+}, []);
+
 
   return (
     <Container>
@@ -112,7 +107,7 @@ const Dashboard = () => {
                 Bioma
               </Typography>
               <Typography variant="body2">
-                {biomaDoMunicipio}
+                {biomaMaisAfetado}
               </Typography>
             </CardContent>
           </Card>
