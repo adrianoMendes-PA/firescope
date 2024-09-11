@@ -107,7 +107,7 @@ const Dashboard = () => {
                 Bioma
               </Typography>
               <Typography variant="body2">
-                {biomaEncontrado}
+                {biomaDoMunicipio}
               </Typography>
             </CardContent>
           </Card>
