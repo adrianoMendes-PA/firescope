@@ -64,9 +64,6 @@ const Dashboard = () => {
   return (
     <Container>
       <Grid container spacing={2}>
-        <Typography variant="h4" align="center" gutterBottom>
-          Estado, município e bioma mais afetados por focos de queimadas
-        </Typography>
         <Grid item xs={6} md={3}>
           <Card>
             <CardContent>
