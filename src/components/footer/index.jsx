@@ -16,7 +16,8 @@ function Footer() {
                 position: 'fixed',
                 bottom: 0,
                 width: '100%',
-                zIndex: 100
+                zIndex: 100,
+                padding: '4px'
             }}
             component="footer"
         >

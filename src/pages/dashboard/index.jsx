@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
 import { Container, Grid, Card, CardContent, Typography } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
@@ -63,11 +64,14 @@ const Dashboard = () => {
 
   return (
     <Container>
+      <Typography sx={{ marginTop:-4, fontSize: 26, color: '#333', marginBottom: 1 }} variant="h5" align="center" gutterBottom>
+        Estado, município e bioma mais afetados por focos de queimadas
+      </Typography>
       <Grid container spacing={2}>
         <Grid item xs={6} md={3}>
           <Card>
             <CardContent>
-              <Typography sx={{ fontSize: 25 }} color="text.secondary" gutterBottom>
+              <Typography sx={{ fontSize: 23 }} color="text.secondary" gutterBottom>
                 Estado
               </Typography>
               <Typography variant="body2">
@@ -79,7 +83,7 @@ const Dashboard = () => {
         <Grid item xs={6} md={3}>
           <Card>
             <CardContent>
-              <Typography sx={{ fontSize: 25 }} color="text.secondary" gutterBottom>
+              <Typography sx={{ fontSize: 23 }} color="text.secondary" gutterBottom>
                 Município
               </Typography>
               <Typography variant="body2">
@@ -91,7 +95,7 @@ const Dashboard = () => {
         <Grid item xs={6} md={3}>
           <Card>
             <CardContent>
-              <Typography sx={{ fontSize: 25 }} color="text.secondary" gutterBottom>
+              <Typography sx={{ fontSize: 23 }} color="text.secondary" gutterBottom>
                 Bioma
               </Typography>
               <Typography variant="body2">
@@ -103,7 +107,7 @@ const Dashboard = () => {
         <Grid item xs={6} md={3}>
           <Card>
             <CardContent>
-              <Typography sx={{ fontSize: 25 }} color="text.secondary" gutterBottom>
+              <Typography sx={{ fontSize: 23 }} color="text.secondary" gutterBottom>
                 Total de focos
               </Typography>
               <Typography variant="body2">
@@ -131,7 +135,7 @@ const Dashboard = () => {
             ]}
             width={800}
             height={400}
-            margin={{ top: 20, bottom: 50, left: 60, right: 50 }}
+            margin={{ top: 10, bottom: 50, left: 60, right: 50 }}
           />
         </Grid>
       </Grid>

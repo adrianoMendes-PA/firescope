@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState, useRef } from 'react';
 import Map, { NavigationControl, Source, Layer, Marker, Popup } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -13,7 +14,7 @@ function App() {
   const [location, setLocation] = useState({});
   const [burningPoints, setBurningPoints] = useState([]);
   const [selectedPoint, setSelectedPoint] = useState(null);
-  const mapRef = useRef(); // Referência ao mapa
+  const mapRef = useRef();
 
   useEffect(() => {
     const options = {
@@ -164,7 +165,7 @@ function App() {
     if (location.latitude && location.longitude && mapRef.current) {
       mapRef.current.flyTo({
         center: [location.longitude, location.latitude],
-        zoom: 8, // Nível de zoom que você deseja ao voltar para a localização
+        zoom: 8,
         essential: true
       });
     }
@@ -206,7 +207,7 @@ function App() {
               className="custom-popup"
             >
               <div>
-                <h2>Informações sobre as queimadas</h2>
+                <h3 style={{fontSize:'17px', textAlign:'center', color:'#333'}}>Informações sobre o foco</h3>
                 <h4>Município: {selectedPoint.municipio}</h4>
                 <h4>Estado: {selectedPoint.estado}</h4>
                 <h4>Data: {new Date(selectedPoint.data).toLocaleString()}</h4>
@@ -225,12 +226,11 @@ function App() {
           </Marker>
 
           {/* Ícone para voltar à localização do usuário */}
-          <div style={{ position: 'absolute', top: 90, left: 10 }}>
+          <div className="return-location-button">
             <MyLocationIcon
-              fontSize="large"
-              color="primary"
+              fontSize="medium"
               onClick={handleReturnToLocation}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', color: '#333', alignItems:'center', marginBottom:'-1px' }}
             />
           </div>
         </Map>
