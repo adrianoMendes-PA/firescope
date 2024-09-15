@@ -4,17 +4,18 @@ import fs from 'fs';
 import path from 'path';
 import csvParser from 'csv-parser';
 import * as cheerio from 'cheerio';
-import { fileURLToPath } from 'url';  // Importar funções para manipulação de URLs
-import { dirname } from 'path';       // Importar dirname
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-// Construir o equivalente a __dirname para ES6
-const __filename = fileURLToPath(import.meta.url);  // Obter o nome do arquivo
-const __dirname = dirname(__filename);              // Obter o diretório
 
-// Função para baixar o CSV mais recente e converter para JSON
+const __filename = fileURLToPath(import.meta.url);  
+const __dirname = dirname(__filename);             
+
+
+// Função para baixar o CSV mais recente e converter para JSON (MUITO CUIDADO AO MEXER NELA!!!)
 export async function downloadAndConvertCSV() {
     const url = 'https://dataserver-coids.inpe.br/queimadas/queimadas/focos/csv/diario/Brasil/';
-    const tmpPath = path.resolve(__dirname, './public');  // Usar __dirname corretamente
+    const tmpPath = path.resolve(__dirname, './public');
 
     try {
         const agent = new https.Agent({
@@ -42,7 +43,7 @@ export async function downloadAndConvertCSV() {
     }
 }
 
-function getLatestCSVLink(html, baseUrl) {
+function getLatestCSVLink(html) {
     const $ = cheerio.load(html);
     return $('a[href$=".csv"]').last().attr('href');
 }
@@ -87,5 +88,9 @@ async function convertCSVtoJSON(csvFilePath, tmpPath) {
     return jsonFilePath;
 }
 
-// Comentar quando for subir
-downloadAndConvertCSV();
+
+try {
+    await downloadAndConvertCSV();
+} catch (error) {
+    console.error('Erro ao executar o script:', error);
+}
