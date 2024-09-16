@@ -6,6 +6,7 @@ on:
     - cron: '00 08 * * *'
     - cron: '00 13 * * *'
     - cron: '00 18 * * *'
+    - cron: '00 23 * * *'
 
 jobs:
   baixar-csv:
