@@ -110518,5 +110518,23 @@
     "risco_fogo": "",
     "bioma": "Caatinga",
     "frp": ""
+  },
+  {
+    "id": "97df8b9f-f7af-39e3-943f-fecbda7ef0e6",
+    "lat": "  -1.840000",
+    "lon": " -45.840000",
+    "data_hora_gmt": "2024-12-04 17:00:00",
+    "satelite": "MSG-03",
+    "municipio": "GOVERNADOR NUNES FREIRE",
+    "estado": "MARANHÃO",
+    "pais": "Brasil",
+    "municipio_id": "2104677",
+    "estado_id": "21",
+    "pais_id": "33",
+    "numero_dias_sem_chuva": "",
+    "precipitacao": "",
+    "risco_fogo": "",
+    "bioma": "Amazônia",
+    "frp": ""
   }
 ]
