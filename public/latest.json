@@ -4732,5 +4732,23 @@
     "risco_fogo": "",
     "bioma": "Caatinga",
     "frp": "8.3"
+  },
+  {
+    "id": "7293337a-d6f3-388b-a414-d2acfc3279af",
+    "lat": "  -9.780370",
+    "lon": " -36.850870",
+    "data_hora_gmt": "2025-04-09 11:34:00",
+    "satelite": "TERRA_M-M",
+    "municipio": "GIRAU DO PONCIANO",
+    "estado": "ALAGOAS",
+    "pais": "Brasil",
+    "municipio_id": "2702900",
+    "estado_id": "27",
+    "pais_id": "33",
+    "numero_dias_sem_chuva": "",
+    "precipitacao": "",
+    "risco_fogo": "",
+    "bioma": "Caatinga",
+    "frp": "21.0"
   }
 ]
