@@ -7396,5 +7396,23 @@
     "risco_fogo": "",
     "bioma": "Pampa",
     "frp": "5.5"
+  },
+  {
+    "id": "9b8ac3b9-40d5-3142-8d37-f9a35a40eda4",
+    "lat": "  -7.136850",
+    "lon": " -35.652090",
+    "data_hora_gmt": "2026-02-23 14:58:00",
+    "satelite": "NOAA-21",
+    "municipio": "ALAGOA GRANDE",
+    "estado": "PARAÍBA",
+    "pais": "Brasil",
+    "municipio_id": "2500304",
+    "estado_id": "25",
+    "pais_id": "33",
+    "numero_dias_sem_chuva": "",
+    "precipitacao": "",
+    "risco_fogo": "",
+    "bioma": "Caatinga",
+    "frp": "11.7"
   }
 ]
