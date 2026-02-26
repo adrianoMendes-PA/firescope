@@ -6244,5 +6244,41 @@
     "risco_fogo": "",
     "bioma": "Amazônia",
     "frp": "89.5"
+  },
+  {
+    "id": "02687327-5bed-3e1b-b658-1e909bdb4177",
+    "lat": "   4.174410",
+    "lon": " -60.567840",
+    "data_hora_gmt": "2026-02-26 13:44:00",
+    "satelite": "TERRA_M-T",
+    "municipio": "PACARAIMA",
+    "estado": "RORAIMA",
+    "pais": "Brasil",
+    "municipio_id": "1400456",
+    "estado_id": "14",
+    "pais_id": "33",
+    "numero_dias_sem_chuva": "",
+    "precipitacao": "",
+    "risco_fogo": "",
+    "bioma": "Amazônia",
+    "frp": "87.2"
+  },
+  {
+    "id": "a84b8cf8-1ea5-3499-9ccd-978bd367de6c",
+    "lat": "   4.175600",
+    "lon": " -60.562360",
+    "data_hora_gmt": "2026-02-26 13:44:00",
+    "satelite": "TERRA_M-T",
+    "municipio": "PACARAIMA",
+    "estado": "RORAIMA",
+    "pais": "Brasil",
+    "municipio_id": "1400456",
+    "estado_id": "14",
+    "pais_id": "33",
+    "numero_dias_sem_chuva": "",
+    "precipitacao": "",
+    "risco_fogo": "",
+    "bioma": "Amazônia",
+    "frp": "72.2"
   }
 ]
