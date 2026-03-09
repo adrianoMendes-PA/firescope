@@ -916,5 +916,41 @@
     "risco_fogo": "",
     "bioma": "Amazônia",
     "frp": "71.9"
+  },
+  {
+    "id": "085bdf69-dbe0-39f1-a006-0502fc7dffeb",
+    "lat": "   2.871300",
+    "lon": " -61.090500",
+    "data_hora_gmt": "2026-03-09 04:00:00",
+    "satelite": "GOES-19",
+    "municipio": "ALTO ALEGRE",
+    "estado": "RORAIMA",
+    "pais": "Brasil",
+    "municipio_id": "1400050",
+    "estado_id": "14",
+    "pais_id": "33",
+    "numero_dias_sem_chuva": "",
+    "precipitacao": "",
+    "risco_fogo": "",
+    "bioma": "Amazônia",
+    "frp": "68.5"
+  },
+  {
+    "id": "ff0ef28b-7b45-3b3a-a1a2-2fbf405c6fe4",
+    "lat": "   1.704900",
+    "lon": " -60.290100",
+    "data_hora_gmt": "2026-03-09 04:30:00",
+    "satelite": "GOES-19",
+    "municipio": "CARACARAÍ",
+    "estado": "RORAIMA",
+    "pais": "Brasil",
+    "municipio_id": "1400209",
+    "estado_id": "14",
+    "pais_id": "33",
+    "numero_dias_sem_chuva": "",
+    "precipitacao": "",
+    "risco_fogo": "",
+    "bioma": "Amazônia",
+    "frp": "58.7"
   }
 ]
