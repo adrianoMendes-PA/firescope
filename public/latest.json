@@ -2014,5 +2014,41 @@
     "risco_fogo": "",
     "bioma": "Pantanal",
     "frp": "4.7"
+  },
+  {
+    "id": "5a865139-60b0-317c-b830-95621ea614ad",
+    "lat": " -12.631030",
+    "lon": " -51.176930",
+    "data_hora_gmt": "2026-03-29 12:46:00",
+    "satelite": "TERRA_M-T",
+    "municipio": "RIBEIRÃO CASCALHEIRA",
+    "estado": "MATO GROSSO",
+    "pais": "Brasil",
+    "municipio_id": "5107180",
+    "estado_id": "51",
+    "pais_id": "33",
+    "numero_dias_sem_chuva": "",
+    "precipitacao": "",
+    "risco_fogo": "",
+    "bioma": "Cerrado",
+    "frp": "10.9"
+  },
+  {
+    "id": "68f687ad-0dd8-3aca-a4de-c530a981feef",
+    "lat": " -21.170990",
+    "lon": " -56.148700",
+    "data_hora_gmt": "2026-03-29 12:49:00",
+    "satelite": "TERRA_M-T",
+    "municipio": "NIOAQUE",
+    "estado": "MATO GROSSO DO SUL",
+    "pais": "Brasil",
+    "municipio_id": "5005806",
+    "estado_id": "50",
+    "pais_id": "33",
+    "numero_dias_sem_chuva": "",
+    "precipitacao": "",
+    "risco_fogo": "",
+    "bioma": "Cerrado",
+    "frp": "10.2"
   }
 ]
